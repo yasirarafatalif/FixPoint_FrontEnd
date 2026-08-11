@@ -84,7 +84,7 @@ export default function ServiceCard({ service }: { service: Service }) {
             <p className="text-xs text-slate-400 font-medium">Starting at</p>
             <p className="font-black text-blue-600 text-xl">৳{service.price}</p>
           </div>
-          <Link href={`/technicians/${service.technician.id}`}>
+          <Link href={`/services/${service.technician.id}`}>
             <button className="bg-slate-900 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-95">
               Book Now
             </button>

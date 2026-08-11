@@ -153,7 +153,7 @@ export default function ServicesClient() {
               <SearchX className="w-10 h-10 text-slate-400" />
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-2">No services found</h3>
-            <p className="text-slate-500 max-w-md mb-8">We couldn't find any services matching your criteria. Try adjusting your filters or search terms.</p>
+            <p className="text-slate-500 max-w-md mb-8">We couldn&apos;t find any services matching your criteria. Try adjusting your filters or search terms.</p>
             <button onClick={clearFilters} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95">
               Clear All Filters
             </button>
