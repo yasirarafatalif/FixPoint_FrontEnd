@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, MapPin, Star, Wrench, Zap, Droplets, PaintRoller, ArrowRight } from 'lucide-react';
+import { getMe } from '@/service/getme';
 
 // Simulated Data Fetching (Replace with actual GET /api/services)
 const FEATURED_SERVICES = [
@@ -54,7 +55,10 @@ const CATEGORIES = [
   { name: 'Painting', icon: PaintRoller, color: 'text-purple-500', bg: 'bg-purple-50' },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const service = await getMe();
+
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
       

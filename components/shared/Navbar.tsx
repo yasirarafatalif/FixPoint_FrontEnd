@@ -6,12 +6,21 @@ import {
   Menu, X, Wrench, User, ChevronDown, 
   LayoutDashboard, Settings, LogOut 
 } from 'lucide-react';
+import { getMe } from '@/service/getme';
 
-export default function Navbar() {
+export default  function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   
   const dropdownRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    async function fetchMe() {
+      const data = await getMe();
+      console.log(data);
+    }
+
+    fetchMe();
+  }, []);
 
   // Demo Auth State (Jokhon user login korbe, eta true hobe)
   const isAuthenticated = false; 
@@ -26,6 +35,7 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-all">

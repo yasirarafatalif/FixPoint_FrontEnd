@@ -1,37 +1,54 @@
-"use server"
+"use server";
 
 import { cookies } from "next/headers";
 
 export const getMe = async () => {
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
 
-    const accessToken = cookieStore.get("accessToken")?.value || null;
+  const accessToken = cookieStore.get("accessToken")?.value;
 
-    if(!accessToken){
-        // throw new Error("User Not Logged In!");
+  if (!accessToken) {
+    return {
+      success: false,
+      message: "User not logged in!",
+      data: null,
+    };
+  }
 
-        return {
-            success : false,
-            message : "User not logged in!"
-        }
-    }
-
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/users/me`, {
-        headers : {
-            // Authorization : accessToken as unknown as string,
-            // Authorization : `${accessToken}`,
-            // Authorization : `Bearer ${accessToken}`
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
         },
 
-        cache : "force-cache",
-        next : {
-            revalidate : 60 * 60 * 24, // 1day
-            tags : ["my-profile"]
-        }
-    });
+        cache: "no-store",
+      }
+    );
 
-    const result = res.json();
+    const result = await res.json();
 
+    if (!res.ok) {
+      return {
+        success: false,
+        message: result?.message || "Failed to get user profile",
+        data: null,
+      };
+    }
 
-    return result
-}
+    return {
+      success: true,
+      data: result,
+    };
+  } catch (error) {
+    console.error("getMe error:", error);
+
+    return {
+      success: false,
+      message: "Something went wrong!",
+      data: null,
+    };
+  }
+};
