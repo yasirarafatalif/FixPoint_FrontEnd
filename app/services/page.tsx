@@ -1,5 +1,4 @@
 import React from 'react';
-// import ServicesClient from './ServicesClient';
 import { Metadata } from 'next';
 import ServicesClient from './_components/ServicesClient';
 
@@ -43,7 +42,7 @@ export default async function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <ServicesClient/>
+      <ServicesClient />
     </div>
   );
 }

@@ -142,13 +142,13 @@ export default function HomePage() {
                 
                 {/* Optimized Image Component */}
                 <div className="relative h-48 w-full bg-slate-100">
-                  <Image 
-                    src={service.image} 
+                  {/* <Image 
+                    src={service.image ||""} 
                     alt={service.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                  />
+                  /> */}
                   <div className="absolute top-3 left-3 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full shadow-sm text-slate-700">
                     {service.category}
                   </div>

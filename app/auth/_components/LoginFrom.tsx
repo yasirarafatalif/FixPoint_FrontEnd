@@ -1,55 +1,38 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { loginAction } from "../_actions/authAction";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [state, action, pending] = useActionState(loginAction, false);
+  const router = useRouter();
 
-  const [loading, setLoading] =
-    useState(false);
+  useEffect(() => {
+    if (!state) return;
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-
-    setLoading(true);
-
-    try {
-      const formData = new FormData(e.currentTarget);
-
-      const email = formData.get("email");
-      const password = formData.get("password");
-
-      console.log({
-        email,
-        password,
-      });
-
-      // Backend API এখানে connect করব
-      //
-      // await api.post("/auth/login", {
-      //   email,
-      //   password,
-      // });
-
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+    if (state.success) {
+      toast.success(state.message || "Login Successful");
+      router.push("/");
     }
-  };
+
+    if (!state.success) {
+      toast.error(state.message || "Login failed");
+    }
+  }, [state]);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <div className="rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
-      
       {/* Logo / Brand */}
       <div className="mb-8 text-center">
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg">
@@ -66,15 +49,10 @@ export default function LoginForm() {
       </div>
 
       {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-5"
-      >
+      <form action={action} className="space-y-5">
         {/* Email */}
         <div className="space-y-2">
-          <Label htmlFor="email">
-            Email address
-          </Label>
+          <Label htmlFor="email">Email address</Label>
 
           <div className="relative">
             <Mail
@@ -96,9 +74,7 @@ export default function LoginForm() {
         {/* Password */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">
-              Password
-            </Label>
+            <Label htmlFor="password">Password</Label>
 
             <Link
               href="/auth/forgot-password"
@@ -117,11 +93,7 @@ export default function LoginForm() {
             <Input
               id="password"
               name="password"
-              type={
-                showPassword
-                  ? "text"
-                  : "password"
-              }
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               className="h-11 pl-10 pr-11"
               required
@@ -129,23 +101,11 @@ export default function LoginForm() {
 
             <button
               type="button"
-              onClick={() =>
-                setShowPassword(
-                  !showPassword
-                )
-              }
+              onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700"
-              aria-label={
-                showPassword
-                  ? "Hide password"
-                  : "Show password"
-              }
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
-              )}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
@@ -156,9 +116,7 @@ export default function LoginForm() {
           disabled={loading}
           className="h-11 w-full bg-blue-600 text-sm font-semibold hover:bg-blue-700"
         >
-          {loading
-            ? "Signing in..."
-            : "Sign in"}
+          {loading ? "Signing in..." : "Sign in"}
         </Button>
       </form>
 
@@ -172,7 +130,6 @@ export default function LoginForm() {
           Create an account
         </Link>
       </div>
-
     </div>
   );
 }
