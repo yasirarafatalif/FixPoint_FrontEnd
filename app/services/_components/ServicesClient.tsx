@@ -2,164 +2,312 @@
 
 import { useMemo, useState } from "react";
 import { SearchX } from "lucide-react";
-import ServiceCard, { Service } from "./ServiceCard";
+
+import ServiceCard, {
+  Service,
+} from "./ServiceCard";
+
 import ServiceFilters from "./ServiceFilters";
 
-// Demo Data
-const demoServices: Service[] = [
-  {
-    id: "s1",
-    title: "Professional Plumbing Repair",
-    description:
-      "Reliable plumbing repair and pipe installation for your home and office.",
-    price: 800,
-    category: "Plumbing",
-    location: "Uttara, Dhaka",
-    rating: 4.8,
-    totalReviews: 124,
-    image:"",
-    technician: {
-      id: "101",
-      name: "Rahim Ahmed",
-      image: "https://i.pravatar.cc/150?img=11",
-      experience: 7,
-    },
-  },
-  {
-    id: "s2",
-    title: "Home Electrical Wiring",
-    description:
-      "Safe and professional electrical repair, wiring, and maintenance.",
-    price: 1200,
-    category: "Electrical",
-    location: "Mirpur, Dhaka",
-    rating: 4.9,
-    totalReviews: 98,
-    image:"",
-    technician: {
-      id: "102",
-      name: "Sakib Hasan",
-      image: "https://i.pravatar.cc/150?img=12",
-      experience: 5,
-    },
-  },
-  {
-    id: "s3",
-    title: "Deep Home Cleaning",
-    description: "Complete home cleaning service with professional equipment.",
-    price: 1500,
-    category: "Cleaning",
-    location: "Dhanmondi, Dhaka",
-    rating: 4.7,
-    totalReviews: 211,
-    image:"",
-    technician: {
-      id: "103",
-      name: "Ayesha Begum",
-      image: "https://i.pravatar.cc/150?img=5",
-      experience: 6,
-    },
-  },
-];
+interface ServicesClientProps {
+  services: Service[];
+}
 
-export default function ServicesClient() {
+export default function ServicesClient({
+  services,
+}: ServicesClientProps) {
+  // ================================
+  // Filter States
+  // ================================
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
   const [location, setLocation] = useState("");
-  const [rating, setRating] = useState("");
+  const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [availability, setAvailability] =
+    useState("");
+  const [experience, setExperience] = useState("");
+  const [skill, setSkill] = useState("");
+  const [duration, setDuration] = useState("");
+  const [sort, setSort] = useState("recommended");
 
-  const categories = [...new Set(demoServices.map((s) => s.category))];
+  // ================================
+  // Locations
+  // ================================
+  const locations = useMemo(() => {
+    return [
+      ...new Set(
+        services.map(
+          (service) =>
+            service.technician.location
+        )
+      ),
+    ];
+  }, [services]);
 
+  // ================================
+  // Skills
+  // ================================
+  const skills = useMemo(() => {
+    return [
+      ...new Set(
+        services.flatMap(
+          (service) =>
+            service.technician.skills || []
+        )
+      ),
+    ];
+  }, [services]);
+
+  // ================================
+  // Filter + Sort
+  // ================================
   const filteredServices = useMemo(() => {
-    return demoServices.filter((service) => {
-      const matchesSearch = !search || service.title.toLowerCase().includes(search.toLowerCase()) || service.description.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = !category || service.category === category;
-      const matchesLocation = !location || service.location.toLowerCase().includes(location.toLowerCase());
-      const matchesRating = !rating || service.rating >= Number(rating);
-      const matchesPrice = !maxPrice || service.price <= Number(maxPrice);
+    const result = services.filter((service) => {
+      const searchValue =
+        search.trim().toLowerCase();
 
-      return matchesSearch && matchesCategory && matchesLocation && matchesRating && matchesPrice;
+      // Search
+      const matchesSearch =
+        !searchValue ||
+        service.title
+          .toLowerCase()
+          .includes(searchValue) ||
+        service.description
+          .toLowerCase()
+          .includes(searchValue) ||
+        service.technician.bio
+          .toLowerCase()
+          .includes(searchValue) ||
+        service.technician.skills.some(
+          (item) =>
+            item
+              .toLowerCase()
+              .includes(searchValue)
+        );
+
+      // Location
+      const matchesLocation =
+        !location ||
+        service.technician.location ===
+          location;
+
+      // Skill
+      const matchesSkill =
+        !skill ||
+        service.technician.skills.includes(skill);
+
+      // Minimum Price
+      const matchesMinPrice =
+        !minPrice ||
+        service.price >= Number(minPrice);
+
+      // Maximum Price
+      const matchesMaxPrice =
+        !maxPrice ||
+        service.price <= Number(maxPrice);
+
+      // Experience
+      const matchesExperience =
+        !experience ||
+        service.technician.experience >=
+          Number(experience);
+
+      // Duration
+      const matchesDuration =
+        !duration ||
+        service.duration <= Number(duration);
+
+      // Availability
+      const matchesAvailability =
+        !availability ||
+        (availability === "available" &&
+          service.technician.isAvailable) ||
+        (availability === "unavailable" &&
+          !service.technician.isAvailable);
+
+      return (
+        service.isActive &&
+        matchesSearch &&
+        matchesLocation &&
+        matchesSkill &&
+        matchesMinPrice &&
+        matchesMaxPrice &&
+        matchesExperience &&
+        matchesDuration &&
+        matchesAvailability
+      );
     });
-  }, [search, category, location, rating, maxPrice]);
 
+    // ================================
+    // Sorting
+    // ================================
+
+    if (sort === "price-low") {
+      result.sort(
+        (a, b) => a.price - b.price
+      );
+    }
+
+    if (sort === "price-high") {
+      result.sort(
+        (a, b) => b.price - a.price
+      );
+    }
+
+    if (sort === "experience") {
+      result.sort(
+        (a, b) =>
+          b.technician.experience -
+          a.technician.experience
+      );
+    }
+
+    if (sort === "duration-short") {
+      result.sort(
+        (a, b) =>
+          a.duration - b.duration
+      );
+    }
+
+    if (sort === "duration-long") {
+      result.sort(
+        (a, b) =>
+          b.duration - a.duration
+      );
+    }
+
+    return result;
+  }, [
+    services,
+    search,
+    location,
+    minPrice,
+    maxPrice,
+    availability,
+    experience,
+    skill,
+    duration,
+    sort,
+  ]);
+
+  // ================================
+  // Clear Filters
+  // ================================
   const clearFilters = () => {
-    setSearch(""); setCategory(""); setLocation(""); setRating(""); setMaxPrice("");
+    setSearch("");
+    setLocation("");
+    setMinPrice("");
+    setMaxPrice("");
+    setAvailability("");
+    setExperience("");
+    setSkill("");
+    setDuration("");
+    setSort("recommended");
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans">
-      
-      {/* Premium Header Banner */}
-      <section className="relative bg-slate-900 py-16 lg:py-20 text-white overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-[50%] -left-[10%] w-[50%] h-[200%] rounded-full bg-blue-600/20 blur-[120px]" />
-          <div className="absolute top-[20%] -right-[10%] w-[40%] h-[150%] rounded-full bg-indigo-600/20 blur-[100px]" />
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4">
-            Find the Perfect <span className="text-blue-500">Professional</span>
-          </h1>
-          <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Book trusted, verified experts for any home service. Search, filter, and hire in seconds.
+    <div className="space-y-8">
+
+      {/* =================================
+          Filters
+      ================================== */}
+      <ServiceFilters
+        search={search}
+        location={location}
+        minPrice={minPrice}
+        maxPrice={maxPrice}
+        availability={availability}
+        experience={experience}
+        skill={skill}
+        duration={duration}
+        sort={sort}
+        locations={locations}
+        skills={skills}
+        onSearchChange={setSearch}
+        onLocationChange={setLocation}
+        onMinPriceChange={setMinPrice}
+        onMaxPriceChange={setMaxPrice}
+        onAvailabilityChange={
+          setAvailability
+        }
+        onExperienceChange={
+          setExperience
+        }
+        onSkillChange={setSkill}
+        onDurationChange={setDuration}
+        onSortChange={setSort}
+        onClear={clearFilters}
+      />
+
+      {/* =================================
+          Results Header
+      ================================== */}
+      <div className="flex items-end justify-between border-b border-slate-200 pb-4">
+        <div>
+          <p className="text-sm font-semibold text-blue-600">
+            OUR SERVICES
+          </p>
+
+          <h2 className="mt-1 text-2xl font-black text-slate-900">
+            Available Services
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Showing{" "}
+            <span className="font-bold text-slate-900">
+              {filteredServices.length}
+            </span>{" "}
+            services
           </p>
         </div>
-      </section>
 
-      {/* Main Content Area */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-8 relative z-20">
-        
-        {/* --- Top Filter Bar --- */}
-        <div className="mb-10">
-          <ServiceFilters
-            search={search} category={category} location={location} rating={rating} maxPrice={maxPrice}
-            categories={categories} onSearchChange={setSearch} onCategoryChange={setCategory} onLocationChange={setLocation}
-            onRatingChange={setRating} onMaxPriceChange={setMaxPrice} onClear={clearFilters}
-          />
+        {/* Total Services */}
+        <div className="hidden rounded-xl bg-white px-4 py-2 text-sm font-medium text-slate-500 shadow-sm ring-1 ring-slate-200 sm:block">
+          {services.length} total
         </div>
+      </div>
 
-        {/* --- Results Section --- */}
-        <div className="flex justify-between items-end mb-6 border-b border-slate-200 pb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900">Available Services</h2>
-            <p className="text-sm font-medium text-slate-500 mt-1">
-              Showing <span className="text-slate-900 font-bold">{filteredServices.length}</span> results
-            </p>
-          </div>
-          
-          {/* Quick Sort (Optional) */}
-          <div className="hidden sm:block">
-            <select className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-sm">
-              <option>Recommended</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Highest Rated</option>
-            </select>
-          </div>
+      {/* =================================
+          Service Cards
+      ================================== */}
+      {filteredServices.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredServices.map((service) => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+            />
+          ))}
         </div>
+      ) : (
+        /* =================================
+            Empty State
+        ================================== */
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-200 bg-white p-8 text-center">
 
-        {/* --- Services Grid --- */}
-        {filteredServices.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredServices.map((service) => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
+          <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-slate-50">
+            <SearchX className="h-10 w-10 text-slate-400" />
           </div>
-        ) : (
-          /* Empty State */
-          <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-3xl border-2 border-slate-200 border-dashed text-center p-8 shadow-sm">
-            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-              <SearchX className="w-10 h-10 text-slate-400" />
-            </div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">No services found</h3>
-            <p className="text-slate-500 max-w-md mb-8">We couldn&apos;t find any services matching your criteria. Try adjusting your filters or search terms.</p>
-            <button onClick={clearFilters} className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all active:scale-95">
-              Clear All Filters
-            </button>
-          </div>
-        )}
-      </section>
+
+          <h3 className="text-xl font-bold text-slate-900">
+            No services found
+          </h3>
+
+          <p className="mt-2 max-w-md text-sm leading-6 text-slate-500">
+            We couldn&apos;t find any services
+            matching your current filters.
+            Try changing your search or filter
+            options.
+          </p>
+
+          <button
+            onClick={clearFilters}
+            className="mt-6 rounded-xl bg-blue-600 px-6 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/20 transition hover:bg-blue-700 active:scale-95"
+          >
+            Clear All Filters
+          </button>
+        </div>
+      )}
     </div>
   );
 }

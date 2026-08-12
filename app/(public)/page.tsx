@@ -2,7 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Search, MapPin, Star, Wrench, Zap, Droplets, PaintRoller, ArrowRight } from 'lucide-react';
-import { getMe } from '@/service/getme';
+import { getAllServices } from '@/service/getAllServices';
+
 
 // Simulated Data Fetching (Replace with actual GET /api/services)
 const FEATURED_SERVICES = [
@@ -56,7 +57,9 @@ const CATEGORIES = [
 ];
 
 export default async function HomePage() {
-  const service = await getMe();
+  const services = await getAllServices();
+  console.log(services);
+
 
 
   return (
