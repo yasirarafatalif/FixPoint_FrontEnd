@@ -5,7 +5,9 @@ import {
   Wallet, CalendarDays, ClipboardList, 
   CheckCircle, XCircle, PlayCircle, CheckSquare, Clock 
 } from 'lucide-react';
-import StatusBadge, { Status } from '../_components/StatusBadge';
+import StatusBadge, { Status } from '../../_components/StatusBadge';
+
+
 
 // Mock Data for Technician Dashboard
 const initialBookings = [
