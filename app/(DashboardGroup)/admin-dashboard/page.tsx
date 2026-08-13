@@ -1,4 +1,4 @@
-import { adminGetUser } from "@/service/adminGetServices";
+import { adminGetBookings, adminGetUser } from "@/service/adminGetServices";
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -80,79 +80,6 @@ const bookingStatus = [
   },
 ];
 
-const recentBookings = [
-  {
-    id: "#BK-10482",
-    customer: "Arif Hossain",
-    service: "AC Repair",
-    technician: "Sakib Ahmed",
-    amount: "৳1,800",
-    status: "PAID",
-  },
-  {
-    id: "#BK-10481",
-    customer: "Nusrat Jahan",
-    service: "Home Cleaning",
-    technician: "Mim Akter",
-    amount: "৳1,200",
-    status: "REQUESTED",
-  },
-  {
-    id: "#BK-10480",
-    customer: "Tanvir Rahman",
-    service: "Plumbing",
-    technician: "Rahim Khan",
-    amount: "৳950",
-    status: "IN_PROGRESS",
-  },
-  {
-    id: "#BK-10479",
-    customer: "Sadia Islam",
-    service: "Electrical Repair",
-    technician: "Imran Hossain",
-    amount: "৳1,500",
-    status: "COMPLETED",
-  },
-  {
-    id: "#BK-10478",
-    customer: "Fahim Ahmed",
-    service: "Painting",
-    technician: "Rasel Mia",
-    amount: "৳4,200",
-    status: "CANCELLED",
-  },
-];
-
-const recentUsers = [
-  {
-    name: "Arif Hossain",
-    email: "arif@example.com",
-    role: "Customer",
-    joined: "2 min ago",
-    initials: "AH",
-  },
-  {
-    name: "Mim Akter",
-    email: "mim@example.com",
-    role: "Technician",
-    joined: "18 min ago",
-    initials: "MA",
-  },
-  {
-    name: "Tanvir Rahman",
-    email: "tanvir@example.com",
-    role: "Customer",
-    joined: "42 min ago",
-    initials: "TR",
-  },
-  {
-    name: "Rahim Khan",
-    email: "rahim@example.com",
-    role: "Technician",
-    joined: "1 hour ago",
-    initials: "RK",
-  },
-];
 
 const chartData = [
   { month: "Jan", value: 42 },
@@ -173,10 +100,22 @@ interface User {
   image?: string;
   createdAt?: string;
 }
+interface Booking {
+  id: string;
+  bookingDate: string;
+  customerId: string;
+  customerNote: string;
+  paymentStatus: string;
+  serviceId: string;
+  status: string;
+  technicianId: string;
+  totalPrice: number;
+}
 
 export default async function AdminDashboardPage() {
   const allusers = await adminGetUser();
-  console.log(allusers);
+  const allBookings = await adminGetBookings();
+
   return (
     <div className="space-y-8">
       {/* ================================= */}
@@ -417,41 +356,61 @@ export default async function AdminDashboardPage() {
               </thead>
 
               <tbody>
-                {recentBookings.map((booking) => (
+                {allBookings.data.data?.slice(0, 5).map((booking: Booking) => (
                   <tr
                     key={booking.id}
                     className="border-b border-slate-50 transition hover:bg-slate-50/70"
                   >
+                    {/* Booking */}
                     <td className="px-6 py-4">
                       <div>
                         <p className="text-sm font-bold text-slate-900">
-                          {booking.id}
+                          #{booking.id.slice(0, 8)}
                         </p>
 
                         <p className="mt-0.5 text-xs text-slate-400">
-                          {booking.customer}
+                          {new Date(booking.bookingDate).toLocaleDateString(
+                            "en-BD",
+                            {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
                     </td>
 
-                    <td className="px-6 py-4 text-sm font-medium text-slate-600">
-                      {booking.service}
+                    {/* Service ID */}
+                    <td className="px-6 py-4">
+                      <p className="max-w-[150px] truncate text-sm font-medium text-slate-600">
+                        {booking.serviceId}
+                      </p>
                     </td>
 
-                    <td className="px-6 py-4 text-sm text-slate-500">
-                      {booking.technician}
+                    {/* Technician ID */}
+                    <td className="px-6 py-4">
+                      <p className="max-w-[150px] truncate text-sm text-slate-500">
+                        {booking.technicianId}
+                      </p>
                     </td>
 
+                    {/* Price */}
                     <td className="px-6 py-4 text-sm font-bold text-slate-900">
-                      {booking.amount}
+                      ৳{booking.totalPrice.toLocaleString("en-BD")}
                     </td>
 
+                    {/* Status */}
                     <td className="px-6 py-4">
                       <StatusBadge status={booking.status} />
                     </td>
 
+                    {/* Action */}
                     <td className="px-6 py-4">
-                      <button className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700">
+                      <button
+                        type="button"
+                        className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                      >
                         <MoreHorizontal size={17} />
                       </button>
                     </td>
