@@ -7,8 +7,8 @@ export default async function ServicesPage() {
 
   console.log("Services API:", result);
 
-  const services = Array.isArray(result?.data)
-    ? result.data
+  const services = Array.isArray(result?.data.data)
+    ? result.data.data
     : [];
 
   return (

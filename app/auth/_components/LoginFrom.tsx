@@ -19,8 +19,13 @@ export default function LoginForm() {
     if (!state) return;
 
     if (state.success) {
-      toast.success(state.message || "Login Successful");
-      router.push("/");
+      toast.success(state.message || "Login Successful", {
+        duration: 1000,
+      });
+
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
     }
 
     if (!state.success) {

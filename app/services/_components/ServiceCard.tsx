@@ -37,6 +37,7 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const hours = Math.floor(service.duration / 60);
   const minutes = service.duration % 60;
+  // console.log(service.id);
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -158,7 +159,7 @@ export default function ServiceCard({
           </div>
 
           <Link
-            href={`/technicians/${service.technician.id}`}
+            href={`/technicians/${service.id}`}
             className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg active:scale-95"
           >
             Book Now

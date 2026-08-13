@@ -13,13 +13,19 @@ import {
   LogOut,
 } from "lucide-react";
 import { getMe } from "@/service/getme";
+import { logout } from "@/service/logout";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const router = useRouter();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<{ email?: string , name: string } | null>(null);
+  const [user, setUser] = useState<{ email?: string; name: string } | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
 
   // Click outside to close dropdown
@@ -59,6 +65,13 @@ export default function Navbar() {
   const isAuthenticated = !!user;
   // console.log(user);
 
+  const handleLogout = async () => {
+    await logout();
+    toast.success("User Logged Out Successfully!");
+    setUser(null);
+    setIsProfileDropdownOpen(false);
+    //  router.push("/login");
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-all">
@@ -136,7 +149,9 @@ export default function Navbar() {
                 {isProfileDropdownOpen && (
                   <div className="absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 transform opacity-100 scale-100 transition-all origin-top-right z-50">
                     <div className="px-4 py-3 border-b border-slate-100 mb-1">
-                      <p className="text-sm text-slate-500">Signed in as {user?.data?.role} </p>
+                      <p className="text-sm text-slate-500">
+                        Signed in as {user?.data?.role}{" "}
+                      </p>
                       <p className="text-sm font-bold text-slate-900 truncate">
                         {user?.data?.email}
                       </p>
@@ -165,7 +180,7 @@ export default function Navbar() {
                     <button
                       onClick={() => {
                         setIsProfileDropdownOpen(false);
-                        // Add Logout Logic Here
+                        handleLogout();
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
                     >

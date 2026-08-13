@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import ServiceDetails from "../_components/ServiceDetails";
 import { getSingleService } from "@/service/getSingelService";
+import ServiceDetails from "@/app/technicians/_components/ServiceDetails";
+
 
 
 
@@ -18,7 +19,7 @@ export default async function ServiceDetailsPage({
  
 
   const result = await getSingleService(serviceId as string);
-  console.log("tech",result);
+  console.log(result);
 
   if (!result.success) {
     return (
