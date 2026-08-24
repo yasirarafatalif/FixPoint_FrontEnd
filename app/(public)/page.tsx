@@ -58,7 +58,7 @@ const CATEGORIES = [
 
 export default async function HomePage() {
   const services = await getAllServices();
-  console.log(services);
+  // console.log(services);
 
 
 

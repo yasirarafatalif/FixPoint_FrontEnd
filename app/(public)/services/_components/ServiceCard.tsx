@@ -159,7 +159,7 @@ export default function ServiceCard({
           </div>
 
           <Link
-            href={`/technicians/${service.id}`}
+            href={`/services/${service.id}`}
             className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white shadow-md transition-all hover:bg-blue-600 hover:shadow-lg active:scale-95"
           >
             Book Now

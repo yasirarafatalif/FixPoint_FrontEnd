@@ -1,21 +1,38 @@
 "use server";
 
-export const getSingleService = async (
-  serviceId: string
-) => {
-    console.log(serviceId);
+import { cookies } from "next/headers";
+
+export const getSingleService = async (serviceId: string) => {
+  console.log(serviceId);
+  const cookieStore = await cookies();
+
+  const accessToken = cookieStore.get("accessToken")?.value;
+
+  if (!accessToken) {
+    return {
+      success: false,
+      message: "User not logged in!",
+      data: null,
+    };
+  }
 
   try {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/services/${serviceId}`;
 
     console.log("Request URL:", url);
 
-    const res = await fetch(url,
-        
-        {
-      cache: "no-store",
-      method: "GET",
-    });
+    const res = await fetch(
+      url,
+
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+
+        cache: "no-store",
+      },
+    );
 
     console.log("Response status:", res);
 
