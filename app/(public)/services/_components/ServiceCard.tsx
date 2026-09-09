@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -18,13 +19,20 @@ export interface Service {
   technicianId: string;
   isActive: boolean;
 
-  technician: {
+  technician?: {
     id: string;
-    bio: string;
-    experience: number;
-    isAvailable: boolean;
-    location: string;
-    skills: string[];
+    bio?: string;
+    experience?: number;
+    isAvailable?: boolean;
+    location?: string;
+    skills?: string[];
+
+    user?: {
+      id: string;
+      name: string;
+      email?: string;
+      image?: string | null;
+    };
   };
 }
 
@@ -37,12 +45,25 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   const hours = Math.floor(service.duration / 60);
   const minutes = service.duration % 60;
-  // console.log(service.id);
+
+  const technician = service.technician;
+
+  const technicianName =
+    technician?.user?.name || "Technician";
+
+  const technicianLocation =
+    technician?.location || "Location not available";
+
+  const technicianExperience =
+    technician?.experience ?? 0;
+
+  const isAvailable =
+    technician?.isAvailable ?? false;
 
   return (
     <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
 
-      {/* Image / Header */}
+      {/* Header */}
       <div className="relative flex h-44 items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-100">
 
         <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-500/10 blur-3xl" />
@@ -55,7 +76,7 @@ export default function ServiceCard({
 
         {/* Availability */}
         <div className="absolute left-4 top-4">
-          {service.technician.isAvailable ? (
+          {isAvailable ? (
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-emerald-600 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               Available
@@ -73,13 +94,17 @@ export default function ServiceCard({
       <div className="flex flex-1 flex-col p-5">
 
         {/* Location */}
-        <div className="mb-3 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-            <MapPin className="h-3.5 w-3.5 text-blue-500" />
-            {service.technician.location}
+        <div className="mb-3 flex items-center justify-between gap-2">
+
+          <div className="flex min-w-0 items-center gap-1.5 text-xs font-semibold text-slate-500">
+            <MapPin className="h-3.5 w-3.5 shrink-0 text-blue-500" />
+
+            <span className="truncate">
+              {technicianLocation}
+            </span>
           </div>
 
-          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-600">
+          <span className="shrink-0 rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-600">
             Service
           </span>
         </div>
@@ -99,49 +124,67 @@ export default function ServiceCard({
 
           <div className="flex items-center gap-3">
 
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-              <UserRound className="h-5 w-5" />
+            {/* Technician Avatar */}
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-blue-100 text-blue-600">
+
+              {technician?.user?.image ? (
+                <img
+                  src={technician.user.image}
+                  alt={technicianName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <UserRound className="h-5 w-5" />
+              )}
             </div>
 
+            {/* Technician Info */}
             <div className="min-w-0">
+
               <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
                 Technician
               </p>
 
               <p className="truncate text-sm font-bold text-slate-900">
-                {service.technician.bio}
+                {technicianName}
               </p>
 
               <p className="text-xs text-slate-500">
-                {service.technician.experience} years experience
+                {technicianExperience} years experience
               </p>
             </div>
           </div>
 
           {/* Skills */}
-          {service.technician.skills?.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {service.technician.skills
-                .slice(0, 3)
-                .map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-md bg-white px-2 py-1 text-[10px] font-medium text-slate-600 ring-1 ring-slate-200"
-                  >
-                    {skill}
-                  </span>
-                ))}
-            </div>
-          )}
+          {technician?.skills &&
+            technician.skills.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+
+                {technician.skills
+                  .slice(0, 3)
+                  .map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-md bg-white px-2 py-1 text-[10px] font-medium text-slate-600 ring-1 ring-slate-200"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+
+              </div>
+            )}
         </div>
 
         {/* Duration */}
         <div className="mt-4 flex items-center gap-1.5 text-xs font-medium text-slate-500">
+
           <Clock3 className="h-4 w-4 text-blue-500" />
 
           <span>
             {hours > 0 && `${hours}h `}
             {minutes > 0 && `${minutes}m`}
+
+            {hours === 0 && minutes === 0 && "Duration not specified"}
           </span>
         </div>
 
@@ -169,3 +212,4 @@ export default function ServiceCard({
     </div>
   );
 }
+
