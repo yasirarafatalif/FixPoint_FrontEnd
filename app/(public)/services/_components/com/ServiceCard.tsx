@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -15,11 +14,7 @@ import {
 
 import { Service } from "@/types/servicesTypes";
 
-export default function ServiceCard({
-  service,
-}: {
-  service: Service;
-}) {
+export default function ServiceCard({ service }: { service: Service }) {
   const { technician } = service;
 
   const hours = Math.floor(service.duration / 60);
@@ -32,12 +27,10 @@ export default function ServiceCard({
 
   return (
     <article className="group relative flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-900/10">
-      
       {/* =========================================
           TOP VISUAL AREA
       ========================================== */}
       <div className="relative h-44 overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950">
-        
         {/* Decorative Background */}
         <div className="absolute -right-12 -top-16 h-44 w-44 rounded-full bg-blue-500/30 blur-3xl transition duration-500 group-hover:scale-125" />
 
@@ -55,7 +48,6 @@ export default function ServiceCard({
 
         {/* Top Row */}
         <div className="relative z-10 flex items-start justify-between p-5">
-          
           {/* Service Icon */}
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white backdrop-blur-md ring-1 ring-white/20 shadow-xl transition duration-500 group-hover:rotate-6 group-hover:scale-110">
             <Wrench className="h-7 w-7" />
@@ -77,9 +69,7 @@ export default function ServiceCard({
               }`}
             />
 
-            {service.isActive
-              ? "Service Active"
-              : "Currently Unavailable"}
+            {service.isActive ? "Service Active" : "Currently Unavailable"}
           </div>
         </div>
 
@@ -99,7 +89,6 @@ export default function ServiceCard({
           CONTENT
       ========================================== */}
       <div className="flex flex-1 flex-col p-6">
-        
         {/* Description */}
         <p className="line-clamp-3 min-h-[60px] text-sm leading-6 text-slate-500">
           {service.description}
@@ -109,7 +98,6 @@ export default function ServiceCard({
             QUICK INFO
         ========================================== */}
         <div className="mt-5 grid grid-cols-2 gap-3">
-          
           {/* Duration */}
           <div className="rounded-2xl border border-slate-100 bg-slate-50 p-3.5 transition group-hover:bg-white group-hover:shadow-sm">
             <div className="flex items-center gap-2 text-slate-400">
@@ -146,9 +134,7 @@ export default function ServiceCard({
         ========================================== */}
         {technician && (
           <div className="mt-5 rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-slate-50 p-4 transition-all duration-300 group-hover:border-blue-100">
-            
             <div className="flex gap-3">
-              
               {/* Avatar */}
               <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/20">
                 <UserRound className="h-6 w-6" />
@@ -156,16 +142,13 @@ export default function ServiceCard({
                 {/* Online Indicator */}
                 <span
                   className={`absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-[3px] border-white ${
-                    technician.isAvailable
-                      ? "bg-emerald-500"
-                      : "bg-slate-400"
+                    technician.isAvailable ? "bg-emerald-500" : "bg-slate-400"
                   }`}
                 />
               </div>
 
               {/* Info */}
               <div className="min-w-0 flex-1">
-                
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
@@ -173,8 +156,7 @@ export default function ServiceCard({
                     </p>
 
                     <p className="mt-1 line-clamp-1 text-sm font-bold text-slate-800">
-                      {technician.bio ||
-                        "Professional Technician"}
+                      {technician.bio || "Professional Technician"}
                     </p>
                   </div>
 
@@ -188,22 +170,18 @@ export default function ServiceCard({
 
                 {/* Location + Experience */}
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500">
-                  
                   <div className="flex items-center gap-1.5">
                     <MapPin className="h-3.5 w-3.5 text-blue-500" />
 
                     <span className="max-w-[120px] truncate">
-                      {technician.location ||
-                        "Location unavailable"}
+                      {technician.location || "Location unavailable"}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
                     <BriefcaseBusiness className="h-3.5 w-3.5 text-blue-500" />
 
-                    <span>
-                      {technician.experience ?? 0}+ years
-                    </span>
+                    <span>{technician.experience ?? 0}+ years</span>
                   </div>
                 </div>
               </div>
@@ -212,17 +190,14 @@ export default function ServiceCard({
             {/* Skills */}
             {technician.skills?.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-1.5">
-                
-                {technician.skills
-                  .slice(0, 3)
-                  .map((skill) => (
-                    <span
-                      key={skill}
-                      className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600 transition hover:border-blue-200 hover:text-blue-600"
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                {technician.skills.slice(0, 3).map((skill) => (
+                  <span
+                    key={skill}
+                    className="rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold text-slate-600 transition hover:border-blue-200 hover:text-blue-600"
+                  >
+                    {skill}
+                  </span>
+                ))}
 
                 {technician.skills.length > 3 && (
                   <span className="rounded-lg bg-slate-100 px-2.5 py-1 text-[10px] font-bold text-slate-500">
@@ -240,37 +215,31 @@ export default function ServiceCard({
         {/* =========================================
             FOOTER
         ========================================== */}
+        {/* =========================================
+    FOOTER
+========================================== */}
         <div className="mt-6 border-t border-slate-100 pt-5">
-          
           <div className="flex items-center gap-3">
-            
-            {/* Details */}
+            {/* Technician Profile */}
             <Link
-              href={`/services/${service.id}`}
-              className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-all hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
-              aria-label="View service details"
+              href={`/technicians/${service.technicianId}`}
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white py-3.5 text-sm font-bold text-slate-700 transition-all duration-300 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
             >
-              <ArrowUpRight className="h-5 w-5" />
+              <UserRound className="h-4 w-4" />
+              View Technician
             </Link>
 
-            {/* Book Button */}
+            {/* Book Service */}
             <Link
               href={`/services/${service.id}`}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-600/20 active:translate-y-0 active:scale-[0.98]"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all duration-300 hover:-translate-y-0.5 hover:bg-blue-600 hover:shadow-xl hover:shadow-blue-600/20 active:scale-[0.98]"
             >
               <Wrench className="h-4 w-4" />
-
-              Book This Service
+              Book Now
             </Link>
           </div>
-
-          {/* Small Footer Text */}
-          <p className="mt-3 text-center text-[10px] font-medium text-slate-400">
-            Secure booking • Trusted professionals
-          </p>
         </div>
       </div>
     </article>
   );
 }
-

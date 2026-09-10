@@ -1,4 +1,4 @@
-import { getSingleService } from "@/service/getSingelService";
+// import { getSingleService } from "@/service/getSingelService";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, ArrowLeft } from "lucide-react";
@@ -8,6 +8,7 @@ import ServiceInfo from "../_components/ServiceInfo";
 import TechnicianCard from "../_components/TechnicianCard";
 import ServiceFeatures from "../_components/ServiceFeatures";
 import ServiceBookingCard from "../_components/ServiceBookingCard";
+import { getSingleService } from "@/service/getAllServices";
 
 export interface Technician {
   id: string;
@@ -41,6 +42,7 @@ export default async function ServiceDetailsPage({
 
   // Fetch single service data
   const res = await getSingleService(id);
+  // const res = await getSingleService(id);
   const serviceData: Service | null = res?.data?.data || res?.data || null;
 
   if (!serviceData) {

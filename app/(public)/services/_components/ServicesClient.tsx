@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from "react";
 import type { Service } from "@/types/servicesTypes";
-import ServiceCard from "./ServiceCard"; 
+import ServiceCard from "./com/ServiceCard";
+// import ServiceCard from "./ServiceCard"; 
 
 interface Category {
   id?: string;
