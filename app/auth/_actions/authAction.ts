@@ -56,8 +56,8 @@ export const loginAction = async (
       redirect("/dashboard");
     } else if (decodedToken.role === "ADMIN") {
       redirect("/admin-dashboard");
-    } else if (decodedToken.role === "AUTHOR") {
-      redirect("/author-dashboard");
+    } else if (decodedToken.role === "TECHNICIAN") {
+      redirect("/dashboard/technician");
     }
   }
 
