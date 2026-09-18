@@ -1,21 +1,26 @@
-import React from 'react';
-
-export type Status = 'REQUESTED' | 'ACCEPTED' | 'DECLINED' | 'PAID' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+export type Status =
+  | "REQUESTED"
+  | "ACCEPTED"
+  | "DECLINED"
+  | "PAID"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "CANCELLED";
 
 const statusStyles: Record<Status, string> = {
-  REQUESTED: 'bg-yellow-100 text-yellow-800',
-  ACCEPTED: 'bg-blue-100 text-blue-800',
-  DECLINED: 'bg-red-100 text-red-800',
-  PAID: 'bg-purple-100 text-purple-800',
-  IN_PROGRESS: 'bg-green-100 text-green-800',
-  COMPLETED: 'bg-gray-100 text-gray-800',
-  CANCELLED: 'bg-slate-800 text-slate-100',
+  REQUESTED: "bg-amber-50 text-amber-700 ring-amber-100",
+  ACCEPTED: "bg-blue-50 text-blue-700 ring-blue-100",
+  DECLINED: "bg-rose-50 text-rose-700 ring-rose-100",
+  PAID: "bg-violet-50 text-violet-700 ring-violet-100",
+  IN_PROGRESS: "bg-emerald-50 text-emerald-700 ring-emerald-100",
+  COMPLETED: "bg-slate-100 text-slate-700 ring-slate-200",
+  CANCELLED: "bg-slate-100 text-slate-600 ring-slate-200",
 };
 
 export default function StatusBadge({ status }: { status: Status }) {
   return (
-    <span className={`px-3 py-1 text-xs font-bold rounded-full ${statusStyles[status]}`}>
-      {status.replace('_', ' ')}
+    <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 ${statusStyles[status]}`}>
+      {status.replace("_", " ")}
     </span>
   );
 }

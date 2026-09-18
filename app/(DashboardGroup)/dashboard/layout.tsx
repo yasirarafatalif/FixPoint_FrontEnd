@@ -1,36 +1,35 @@
 
-import React from "react";
-import DashboardSidebar from "./_components/DashboardSidebar";
+import { getMe } from "@/service/getme";
+import DashboardShell from "./_components/DashboardShell";
+import { fallbackDashboardRole, type DashboardRole } from "./_components/dashboardMenu";
 
+type ApiUser = {
+  name?: string;
+  email?: string;
+  role?: string;
+  data?: ApiUser;
+};
 
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const response = await getMe();
+  const rawUser = response.success ? (response.data as ApiUser) : undefined;
+  const user = rawUser?.data ?? rawUser;
+  const role = user?.role as DashboardRole | undefined;
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
-
-      {/* Dynamic Sidebar */}
-      <DashboardSidebar />
-
-      {/* Main Content */}
-      <main className="flex min-w-0 flex-1 flex-col overflow-hidden">
-
-        {/* Mobile Header */}
-        <header className="flex h-16 items-center border-b border-slate-200 bg-white px-4 md:hidden">
-          <span className="text-lg font-bold text-slate-900">
-            Dashboard
-          </span>
-        </header>
-
-        <div className="flex-1 overflow-y-auto p-4 sm:p-8">
-          {children}
-        </div>
-
-      </main>
-    </div>
+    <DashboardShell
+      user={{
+        name: user?.name,
+        email: user?.email,
+        role: role === "ADMIN" || role === "TECHNICIAN" || role === "CUSTOMER" ? role : fallbackDashboardRole,
+      }}
+    >
+      {children}
+    </DashboardShell>
   );
 }
 

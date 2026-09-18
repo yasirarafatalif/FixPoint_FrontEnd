@@ -15,18 +15,18 @@ import {
 import { getMe } from "@/service/getme";
 import { logout } from "@/service/logout";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const router = useRouter();
+  const pathname = usePathname();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [user, setUser] = useState<{ email?: string; name: string } | null>(
+  const [user, setUser] = useState<{ data?: { email?: string; name?: string; role?: string }; email?: string; name?: string; role?: string } | null>(
     null,
   );
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
 
   // Click outside to close dropdown
   useEffect(() => {
@@ -72,6 +72,8 @@ export default function Navbar() {
     setIsProfileDropdownOpen(false);
     //  router.push("/login");
   };
+
+  if (pathname.startsWith("/dashboard")) return null;
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-xl border-b border-slate-200/80 shadow-sm transition-all">
@@ -158,7 +160,7 @@ export default function Navbar() {
                     </div>
 
                     <Link
-                      href="/dashboard/customer"
+                      href="/dashboard"
                       onClick={() => setIsProfileDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors"
                     >

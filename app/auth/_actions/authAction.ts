@@ -52,12 +52,18 @@ export const loginAction = async (
     });
     const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
 
-    if (decodedToken.role === "USER") {
-      redirect("/dashboard");
-    } else if (decodedToken.role === "ADMIN") {
-      redirect("/admin-dashboard");
-    } else if (decodedToken.role === "TECHNICIAN") {
+    const role = decodedToken.role?.toUpperCase();
+
+    if (role === "ADMIN") {
+      redirect("/dashboard/admin-dashboard");
+    }
+
+    if (role === "TECHNICIAN") {
       redirect("/dashboard/technician");
+    }
+
+    if (role === "CUSTOMER" || role === "USER") {
+      redirect("/dashboard/customer");
     }
   }
 

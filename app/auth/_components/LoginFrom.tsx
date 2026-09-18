@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
-import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader2, LockKeyhole, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,8 +33,6 @@ export default function LoginForm() {
     }
   }, [state]);
   const [showPassword, setShowPassword] = useState(false);
-
-  const [loading, setLoading] = useState(false);
 
   return (
     <div className="rounded-2xl border bg-white p-6 shadow-sm sm:p-8">
@@ -72,6 +70,7 @@ export default function LoginForm() {
               placeholder="you@example.com"
               className="h-11 pl-10"
               required
+              disabled={pending}
             />
           </div>
         </div>
@@ -102,11 +101,13 @@ export default function LoginForm() {
               placeholder="Enter your password"
               className="h-11 pl-10 pr-11"
               required
+              disabled={pending}
             />
 
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
+              disabled={pending}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
@@ -118,10 +119,17 @@ export default function LoginForm() {
         {/* Login button */}
         <Button
           type="submit"
-          disabled={loading}
-          className="h-11 w-full bg-blue-600 text-sm font-semibold hover:bg-blue-700"
+          disabled={pending}
+          className="h-11 w-full bg-blue-600 text-sm font-semibold shadow-lg shadow-blue-600/20 transition-all hover:bg-blue-700 disabled:cursor-wait disabled:opacity-90"
         >
-          {loading ? "Signing in..." : "Sign in"}
+          {pending ? (
+            <span className="flex items-center gap-2" aria-live="polite">
+              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+              Signing you in...
+            </span>
+          ) : (
+            "Sign in"
+          )}
         </Button>
       </form>
 
