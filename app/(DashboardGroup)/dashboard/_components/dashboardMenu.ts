@@ -48,14 +48,14 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
   },
   ADMIN: {
     title: "Administration",
-    home: "/dashboard/admin-dashboard",
+    home: "/dashboard/admin",
     main: [
-      { label: "Overview", href: "/dashboard/admin-dashboard", icon: LayoutDashboard },
-      { label: "Users", href: "/dashboard/admin-dashboard/users", icon: Users },
-      { label: "Categories", href: "/dashboard/admin-dashboard/categories", icon: Tags },
+      { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
+      { label: "Users", href: "/dashboard/admin/users", icon: Users },
+      { label: "Categories", href: "/dashboard/admin/categories", icon: Tags },
     ],
     secondary: [
-      { label: "Platform settings", href: "/dashboard/admin-dashboard", icon: Settings },
+      { label: "Platform settings", href: "/dashboard/admin/settings", icon: Settings },
     ],
   },
 };
