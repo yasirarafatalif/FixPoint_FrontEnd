@@ -1,131 +1,191 @@
-import { NextResponse } from "next/server";
+import { JwtPayload } from "jsonwebtoken";
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
+import { getNewAccessToken } from "./service/refreshToken";
 import { jwtUtils } from "./utils/jwt";
 
 const AUTH_ROUTES = [
-  "/auth",
-  "/login",
-  "/register",
-  "/forgot-password",
-  "/reset-password",
+  "/auth/login",
+  "/auth/register",
 ];
 
-const PROTECTED_ROUTES = [
-  "/dashboard",
-  "/dashboard/admin",
-  "/dashboard/technician",
-  "/dashboard/customer",
-  "/profile",
-  "/settings",
-  "/orders",
-  "/account",
+const PUBLIC_ROUTES = [
+  "/",
+  "/services",
+  "/technicians",
+  "/payment/success",
+  "/payment/cancel",
 ];
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const accessToken = request.cookies.get("accessToken")?.value;
+  const cookieStore = await cookies();
 
-  const isAuthRoute = AUTH_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/"),
-  );
+  let accessToken = request.cookies.get("accessToken")?.value;
+  const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  const isProtectedRoute = PROTECTED_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route + "/"),
-  );
-
-  if (isProtectedRoute && !accessToken) {
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
-  // const decodedAccessToken = accessToken
-  //   ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string)
-  //   : null;
-
-  // let userRole = null;
-  // if (decodedAccessToken) {
-  //   userRole = (decodedAccessToken as { role?: string }).role;
-  // }
-
-  let userRole = null;
-  if (accessToken) {
-    try {
-      const decodedAccessToken = jwtUtils.verifyToken(
+  let decodedAccessToken = accessToken
+    ? jwtUtils.verifyToken(
         accessToken,
-        process.env.JWT_ACCESS_SECRET as string,
+        process.env.JWT_ACCESS_SECRET as string
+      )
+    : null;
+
+  const decodedRefreshToken = refreshToken
+    ? jwtUtils.verifyToken(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET as string
+      )
+    : null;
+
+  // Access token expired but refresh token is valid
+  if (
+    !decodedAccessToken &&
+    decodedRefreshToken
+  ) {
+    const result = await getNewAccessToken();
+
+    if (result.success) {
+      const newAccessToken = result.data.accessToken;
+
+      cookieStore.set("accessToken", newAccessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24,
+        sameSite: "lax",
+        path: "/",
+      });
+
+      accessToken = newAccessToken;
+
+      decodedAccessToken = jwtUtils.verifyToken(
+        accessToken!,
+        process.env.JWT_ACCESS_SECRET as string
       );
-
-      if (decodedAccessToken) {
-        userRole = (decodedAccessToken as { role?: string }).role;
-      }
-    } catch (error) {
-      console.error("JWT verification failed:", error);
-
-      const response = NextResponse.redirect(
-        new URL("/auth/login", request.url),
-      );
-
-      response.cookies.delete("accessToken");
-
-      return response;
     }
   }
 
-  console.log("proxy file", userRole);
+  let userRole = null;
 
+  // Access token invalid / expired
+  if (!decodedAccessToken) {
+    cookieStore.delete("accessToken");
+  }
 
-  if (accessToken && isAuthRoute) {
-    if (userRole === "ADMIN") {
-      return NextResponse.redirect(new URL("/dashboard/admin", request.url));
+  // Get role from access token
+  if (
+    decodedAccessToken &&
+    typeof decodedAccessToken !== "string"
+  ) {
+    userRole = (decodedAccessToken as JwtPayload).role;
+  }
+
+  // Logged-in user trying to access login/register
+  if (
+    accessToken &&
+    AUTH_ROUTES.some(
+      (route) =>
+        pathname === route ||
+        pathname.startsWith(route + "/")
+    )
+  ) {
+    if (userRole === "CUSTOMER") {
+      return NextResponse.redirect(
+        new URL("/dashboard/customer", request.url)
+      );
+    } else if (userRole === "TECHNICIAN") {
+      return NextResponse.redirect(
+        new URL("/dashboard/technician", request.url)
+      );
+    } else if (userRole === "ADMIN") {
+      return NextResponse.redirect(
+        new URL("/dashboard/admin", request.url)
+      );
+    } else {
+      return NextResponse.redirect(
+        new URL("/", request.url)
+      );
+    }
+  }
+
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) =>
+      pathname === route ||
+      pathname.startsWith(route + "/")
+  );
+
+  const isAuthRoute = AUTH_ROUTES.some(
+    (route) =>
+      pathname === route ||
+      pathname.startsWith(route + "/")
+  );
+
+  // Authentication protection
+  if (
+    !accessToken &&
+    !isPublicRoute &&
+    !isAuthRoute
+  ) {
+    return NextResponse.redirect(
+      new URL(
+        `/auth/login?redirect=${pathname}`,
+        request.url
+      )
+    );
+  }
+
+  // Authorization : Role based access control
+
+  // Customer dashboard
+  if (
+    pathname.startsWith("/dashboard/customer") &&
+    userRole !== "CUSTOMER"
+  ) {
+    return NextResponse.redirect(
+      new URL("/not-found", request.url)
+    );
+  }
+
+  // Technician dashboard
+  else if (
+    pathname.startsWith("/dashboard/technician") &&
+    userRole !== "TECHNICIAN"
+  ) {
+    return NextResponse.redirect(
+      new URL("/not-found", request.url)
+    );
+  }
+
+  // Admin dashboard
+  else if (
+    pathname.startsWith("/dashboard/admin") &&
+    userRole !== "ADMIN"
+  ) {
+    return NextResponse.redirect(
+      new URL("/not-found", request.url)
+    );
+  }
+
+  // /dashboard directly visited
+  if (pathname === "/dashboard") {
+    if (userRole === "CUSTOMER") {
+      return NextResponse.redirect(
+        new URL("/dashboard/customer", request.url)
+      );
     }
 
     if (userRole === "TECHNICIAN") {
       return NextResponse.redirect(
-        new URL("/dashboard/technician", request.url),
+        new URL("/dashboard/technician", request.url)
       );
     }
 
-    if (userRole === "CUSTOMER" || userRole === "USER") {
-      return NextResponse.redirect(new URL("/dashboard/customer", request.url));
-    }
-  }
-
-  if (pathname.startsWith("/dashboard")) {
-    // Customer dashboard
-    if (
-      pathname.startsWith("/dashboard/customer") &&
-      userRole !== "CUSTOMER") {
-      return NextResponse.redirect(new URL("/not-found", request.url));
-    }
-
-    // Technician dashboard
-    if (
-      pathname.startsWith("/dashboard/technician") &&
-      userRole !== "TECHNICIAN"
-    ) {
-      return NextResponse.redirect(new URL("/not-found", request.url));
-    }
-
-    // Admin dashboard
-    if (pathname.startsWith("/dashboard/admin") && userRole !== "ADMIN") {
-      return NextResponse.redirect(new URL("/not-found", request.url));
-    }
-
-    if (pathname === "/dashboard") {
-      if (userRole === "ADMIN") {
-        return NextResponse.redirect(new URL("/dashboard/admin", request.url));
-      }
-
-      if (userRole === "TECHNICIAN") {
-        return NextResponse.redirect(
-          new URL("/dashboard/technician", request.url),
-        );
-      }
-
-      if (userRole === "CUSTOMER" || userRole === "USER") {
-        return NextResponse.redirect(
-          new URL("/dashboard/customer", request.url),
-        );
-      }
+    if (userRole === "ADMIN") {
+      return NextResponse.redirect(
+        new URL("/dashboard/admin", request.url)
+      );
     }
   }
 
@@ -133,5 +193,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.ico|_next/image|.*\\.png$).*)"],
+  matcher: [
+    "/((?!api|_next/static|favicon.ico|_next/image|.*\\.png$).*)",
+  ],
 };
