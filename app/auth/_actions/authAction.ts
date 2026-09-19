@@ -55,7 +55,7 @@ export const loginAction = async (
     const role = decodedToken.role?.toUpperCase();
 
     if (role === "ADMIN") {
-      redirect("/dashboard/admin-dashboard");
+      redirect("/dashboard/admin");
     }
 
     if (role === "TECHNICIAN") {

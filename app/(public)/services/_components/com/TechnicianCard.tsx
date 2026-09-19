@@ -1,4 +1,4 @@
-import { Technician } from "@/types";
+import { Technician } from "@/types/technicain";
 
 export default function TechnicianCard({ tech }: { tech: Technician }) {
   return (

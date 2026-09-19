@@ -1,12 +1,25 @@
-import DashboardPlaceholder from "../../_components/DashboardPlaceholder";
+import { getAllAdminUsers } from "@/service/adminUserService";
+import UsersClient from "./UsersClient";
 
-export default function AdminUsersPage() {
+
+export default async function AdminUsersPage() {
+  const response = await getAllAdminUsers();
+
+  const result = response;
+
+  // console.log(result.data);
+
+  if (!result.success) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-lg text-red-500">
+          {result.message}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <DashboardPlaceholder
-      eyebrow="Administration"
-      title="Manage users"
-      description="Search, review and manage customer and technician accounts from one place."
-      backHref="/dashboard/admin-dashboard"
-    />
+    <UsersClient users={result.data ?? []} />
   );
 }
