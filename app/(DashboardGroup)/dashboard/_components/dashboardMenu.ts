@@ -53,6 +53,7 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
       { label: "Users", href: "/dashboard/admin/users", icon: Users },
       { label: "Categories", href: "/dashboard/admin/categories", icon: Tags },
+      { label: "Bookings", href: "/dashboard/admin/bookings", icon: CalendarDays },
     ],
     secondary: [
       { label: "Platform settings", href: "/dashboard/admin/settings", icon: Settings },
