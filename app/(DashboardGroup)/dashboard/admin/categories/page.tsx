@@ -1,5 +1,25 @@
-import DashboardPlaceholder from "../../_components/DashboardPlaceholder";
+import { getAllAdminCategories } from "@/service/adminCategoryService";
+import CategoriesClient from "./CategoriesClient";
 
-export default function AdminCategoriesPage() {
-  return <DashboardPlaceholder eyebrow="Administration" title="Service categories" description="Create and organise the categories customers use to find services." backHref="/dashboard/admin-dashboard" />;
+export default async function CategoriesPage() {
+  const result = await getAllAdminCategories();
+  // console.log(result)
+
+  if (!result.success) {
+    return (
+      <div className="flex min-h-[500px] items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-lg font-semibold text-slate-900">
+            Failed to load categories
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            {result.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return <CategoriesClient categories={result.data ?? []} />;
 }

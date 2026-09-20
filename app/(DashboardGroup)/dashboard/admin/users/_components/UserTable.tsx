@@ -14,7 +14,8 @@ import {
 
 import type { User, UserRole, UserStatus } from "../UsersClient";
 import Swal from "sweetalert2";
-import { adminUpdateUserStatus } from "@/service/adminUsersStatusUpdate";
+import { adminUpdateUserStatus } from "@/service/adminUserService";
+
 
 interface UserTableProps {
   users: User[];
