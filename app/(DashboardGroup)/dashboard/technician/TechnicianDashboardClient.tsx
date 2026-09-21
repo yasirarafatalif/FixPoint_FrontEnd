@@ -2,25 +2,39 @@
 
 import type { TechnicianProfile } from "@/types/technician";
 
+import TechnicianStats from "./_components/TechnicianStats";
 import TechnicianProfileCard from "./_components/TechnicianProfileCard";
 import AvailabilityCard from "./_components/AvailabilityCard";
-import TechnicianStats from "./_components/TechnicianStats";
+import RecentBookings from "./_components/RecentBookings";
+import { TechnicianBooking } from "@/types/technicianBooking";
+import { User } from "@/types/user";
 
-interface TechnicianDashboardClientProps {
-  profile: TechnicianProfile | null;
+interface Booking {
+  id: string;
+  serviceName: string;
+  customerName: string;
+  bookingDate: string;
+  amount: number;
+  status:
+    | "PENDING"
+    | "CONFIRMED"
+    | "COMPLETED"
+    | "CANCELLED";
+}
+
+interface Props {
+  profile: TechnicianProfile;
   availability: unknown;
+  user: User;
+  bookings: TechnicianBooking[];
 }
 
 export default function TechnicianDashboardClient({
   profile,
   availability,
-}: TechnicianDashboardClientProps) {
-  if (!profile) {
-    return null;
-  }
-
-  console.log(availability)
-
+  user,
+  bookings,
+}: Props) {
   return (
     <div className="space-y-6 p-6">
 
@@ -31,36 +45,50 @@ export default function TechnicianDashboardClient({
         </p>
 
         <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
-          Welcome back, {profile.name}
+          Welcome back {user.name.toLocaleUpperCase()} 
         </h1>
 
         <p className="mt-1 text-sm text-slate-500">
-          Manage your profile and availability.
+          Here&apos;s what&apos;s happening with your technician account.
         </p>
       </div>
 
       {/* Stats */}
       <TechnicianStats
-        profile={profile}
+        isAvailable={profile.isAvailable}
+        totalBookings={bookings.length}
+        completedJobs={
+          bookings.filter(
+            (booking) => booking.status === "COMPLETED"
+          ).length
+        }
+        totalEarnings={bookings.reduce(
+          (total, booking) =>
+            total + booking.totalPrice,
+          0
+        )}
       />
 
-      {/* Main */}
+      {/* Profile + Availability */}
       <div className="grid gap-6 lg:grid-cols-3">
 
-        <div className="lg:col-span-2">
-          <TechnicianProfileCard
-            profile={profile}
-          />
-        </div>
+        <TechnicianProfileCard
+          user={user}
+          profile={profile}
+        />
 
-        <div>
-          <AvailabilityCard
-            availability={availability}
-            isAvailable={profile.isAvailable}
-          />
-        </div>
+        <AvailabilityCard
+          availability={availability}
+          isAvailable={profile.isAvailable}
+        />
 
       </div>
+
+      {/* Recent Bookings */}
+      <RecentBookings
+        bookings={bookings}
+      />
+
     </div>
   );
 }

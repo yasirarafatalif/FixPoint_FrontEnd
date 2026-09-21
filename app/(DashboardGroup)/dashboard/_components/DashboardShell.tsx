@@ -45,7 +45,7 @@ export default function DashboardShell({
   const pathname = usePathname();
   const router = useRouter();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
   const menu = dashboardMenus[user.role];
 
@@ -182,10 +182,10 @@ export default function DashboardShell({
               className="hidden rounded-xl border border-slate-200 p-2.5 text-slate-600 hover:bg-slate-50 lg:block"
             >
               {collapsed ? (
-  <ChevronsRight size={19} />
-) : (
-  <ChevronsLeft size={19} />
-)}
+                <ChevronsRight size={19} />
+              ) : (
+                <ChevronsLeft size={19} />
+              )}
             </button>
             <div>
               <p className="hidden text-[10px] font-bold uppercase tracking-[0.16em] text-blue-600 sm:block">

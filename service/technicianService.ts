@@ -13,6 +13,7 @@ import type {
   TechnicianBookingStatus,
 } from "@/types/technicianBooking";
 import { jwtUtils } from "@/utils/jwt";
+import { User } from "@/types/user";
 
 
 interface DecodedToken {
@@ -51,18 +52,18 @@ export const technicianGetProfile = async () => {
 
     const result = await response.json();
 
-    // if (!response.ok) {
-    //   return {
-    //     success: false,
-    //     message:
-    //       result.message || "Failed to fetch technician profile",
-    //     data: null,
-    //   };
-    // }
+    if (!response.ok) {
+      return {
+        success: false,
+        message:
+          result.message || "Failed to fetch technician profile",
+        data: null,
+      };
+    }
     return {
       success: true,
       message: result.message,
-      data: result.data as TechnicianProfile,
+      data: result.data as User,
     };
 
     // return {
@@ -161,7 +162,7 @@ export const getTechnicianAvailability = async () => {
     }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/technician/availability`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/technician`,
       {
         method: "GET",
         headers: {

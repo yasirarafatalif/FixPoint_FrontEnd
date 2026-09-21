@@ -6,24 +6,18 @@ export type TechnicianBookingStatus =
 
 export interface TechnicianBooking {
   id: string;
-
   bookingDate: string;
-
   status: TechnicianBookingStatus;
+  totalPrice: number;
 
-  totalAmount: number;
+  customerId: string;
+  serviceId: string;
+  technicianId: string;
 
-  service: {
-    id: string;
-    title: string;
-  };
+  customerNote: string;
 
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
+  paymentStatus: string;
 
   createdAt: string;
+  updatedAt: string;
 }
