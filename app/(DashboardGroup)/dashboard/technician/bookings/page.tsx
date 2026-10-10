@@ -3,9 +3,10 @@ import { getTechnicianBookings } from "@/service/technicianService";
 import TechnicianBookingsClient from "./TechnicianBookingsClient";
 
 export default async function TechnicianBookingsPage() {
-  const result = await getTechnicianBookings();
+  const bookingsResult = await getTechnicianBookings();
 
-  if (!result.success) {
+
+  if (!bookingsResult.success) {
     return (
       <div className="flex min-h-[500px] items-center justify-center">
         <div className="text-center">
@@ -14,7 +15,7 @@ export default async function TechnicianBookingsPage() {
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
-            {result.message}
+            {bookingsResult.message}
           </p>
         </div>
       </div>
@@ -23,7 +24,7 @@ export default async function TechnicianBookingsPage() {
 
   return (
     <TechnicianBookingsClient
-      bookings={result.data ?? []}
+      bookings={bookingsResult.data ?? []}
     />
   );
 }

@@ -15,7 +15,6 @@ import type {
 import { jwtUtils } from "@/utils/jwt";
 import { User } from "@/types/user";
 
-
 interface DecodedToken {
   id: string;
   role: string;
@@ -38,7 +37,6 @@ export const technicianGetProfile = async () => {
     // Decode access token
 
     const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_URL}/api/technician/${userId}`,
       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`,
       {
         method: "GET",
@@ -46,17 +44,15 @@ export const technicianGetProfile = async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         cache: "no-store",
-      }
+      },
     );
-   
 
     const result = await response.json();
 
     if (!response.ok) {
       return {
         success: false,
-        message:
-          result.message || "Failed to fetch technician profile",
+        message: result.message || "Failed to fetch technician profile",
         data: null,
       };
     }
@@ -65,12 +61,6 @@ export const technicianGetProfile = async () => {
       message: result.message,
       data: result.data as User,
     };
-
-    // return {
-    //   success: true,
-    //   message: result.message,
-    //   data: result.data,
-    // };
   } catch (error) {
     console.error("Get technician profile error:", error);
 
@@ -82,19 +72,11 @@ export const technicianGetProfile = async () => {
   }
 };
 
-
-
-
-
-
-
-
 export const getTechnicianProfile = async () => {
   try {
     const cookieStore = await cookies();
 
-    const accessToken =
-      cookieStore.get("accessToken")?.value;
+    const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
       return {
@@ -112,7 +94,7 @@ export const getTechnicianProfile = async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     const result = await response.json();
@@ -120,9 +102,7 @@ export const getTechnicianProfile = async () => {
     if (!response.ok) {
       return {
         success: false,
-        message:
-          result.message ||
-          "Failed to fetch technician profile",
+        message: result.message || "Failed to fetch technician profile",
         data: null,
       };
     }
@@ -143,15 +123,11 @@ export const getTechnicianProfile = async () => {
   }
 };
 
-
-
-
 export const getTechnicianAvailability = async () => {
   try {
     const cookieStore = await cookies();
 
-    const accessToken =
-      cookieStore.get("accessToken")?.value;
+    const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
       return {
@@ -169,7 +145,7 @@ export const getTechnicianAvailability = async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     const result = await response.json();
@@ -177,9 +153,7 @@ export const getTechnicianAvailability = async () => {
     if (!response.ok) {
       return {
         success: false,
-        message:
-          result.message ||
-          "Failed to fetch availability",
+        message: result.message || "Failed to fetch availability",
         data: null,
       };
     }
@@ -200,13 +174,11 @@ export const getTechnicianAvailability = async () => {
   }
 };
 
-
 export const getTechnicianBookings = async () => {
   try {
     const cookieStore = await cookies();
 
-    const accessToken =
-      cookieStore.get("accessToken")?.value;
+    const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
       return {
@@ -224,7 +196,7 @@ export const getTechnicianBookings = async () => {
           Authorization: `Bearer ${accessToken}`,
         },
         cache: "no-store",
-      }
+      },
     );
 
     const result = await response.json();
@@ -232,12 +204,11 @@ export const getTechnicianBookings = async () => {
     if (!response.ok) {
       return {
         success: false,
-        message:
-          result.message ||
-          "Failed to fetch bookings",
+        message: result.message || "Failed to fetch bookings",
         data: [],
       };
     }
+    console.log(result.data)
 
     return {
       success: true,
@@ -255,16 +226,14 @@ export const getTechnicianBookings = async () => {
   }
 };
 
-
 export const updateTechnicianBookingStatus = async (
   bookingId: string,
-  status: TechnicianBookingStatus
+  status: TechnicianBookingStatus,
 ) => {
   try {
     const cookieStore = await cookies();
 
-    const accessToken =
-      cookieStore.get("accessToken")?.value;
+    const accessToken = cookieStore.get("accessToken")?.value;
 
     if (!accessToken) {
       return {
@@ -284,7 +253,7 @@ export const updateTechnicianBookingStatus = async (
         body: JSON.stringify({
           status,
         }),
-      }
+      },
     );
 
     const result = await response.json();
@@ -292,9 +261,7 @@ export const updateTechnicianBookingStatus = async (
     if (!response.ok) {
       return {
         success: false,
-        message:
-          result.message ||
-          "Failed to update booking",
+        message: result.message || "Failed to update booking",
       };
     }
 

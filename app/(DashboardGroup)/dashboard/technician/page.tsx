@@ -8,22 +8,13 @@ import {
 import TechnicianDashboardClient from "./TechnicianDashboardClient";
 
 export default async function TechnicianDashboardPage() {
-  // const [
-  //   profileResult,
-  //   availabilityResult,
-  //   bookingsResult,
-  // ] = await Promise.all([
-  //   getTechnicianProfile(),
-  //   getTechnicianAvailability(),
-  //   getTechnicianBookings(),
-  // ]);
 
   const profileResult = await getTechnicianProfile();
   const userProfile = await technicianGetProfile();
   const availabilityResult = await getTechnicianAvailability();
   const bookingsResult = await getTechnicianBookings();
-  console.log(bookingsResult)
-  console.log(availabilityResult)
+  // console.log(bookingsResult)
+  // console.log(availabilityResult)
 
   if (
     !profileResult.success ||

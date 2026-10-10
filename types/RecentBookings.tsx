@@ -4,5 +4,5 @@ interface Booking {
   customerName: string;
   bookingDate: string;
   amount: number;
-  status: "PENDING" | "CONFIRMED" | "COMPLETED" | "CANCELLED";
+  status: "PENDING" | "CONFIRMED" | "ACCEPTED" | "COMPLETED" | "DECLINED" | "REQUESTED" | "REFUNDED" | "IN_PROGRESS" | "PAID";
 }

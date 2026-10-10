@@ -49,12 +49,11 @@ export default function RecentBookings({ bookings }: Props) {
 
                 <div className="min-w-0">
                   <h3 className="truncate text-sm font-semibold text-slate-900">
-                    Booking ID : {booking.id}
+                   Service Name : {booking.service.title}
                   </h3>
 
                   <p className="mt-1 text-xs text-slate-500">
-                    {/* {booking.customer.name} */}
-                    {"Booking.Name"}
+                    {booking.customer.name}
                   </p>
 
                   <div className="mt-1 flex items-center gap-1 text-xs text-slate-400">
