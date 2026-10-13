@@ -6,6 +6,7 @@ import {
   Users,
   UserRound,
   type LucideIcon,
+  CalendarClock,
 } from "lucide-react";
 
 export type DashboardRole = "CUSTOMER" | "TECHNICIAN" | "ADMIN";
@@ -40,8 +41,8 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
     main: [
       { label: "Overview", href: "/dashboard/technician", icon: LayoutDashboard },
       { label: "Bookings", href: "/dashboard/technician/bookings", icon: CalendarDays },
-      { label: "Availability", href: "/dashboard/technician/availability", icon: CalendarDays },
-      { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound }
+      { label: "Availability", href: "/dashboard/technician/availability", icon: CalendarClock },
+      // { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound }
     ],
     secondary: [
       { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound },

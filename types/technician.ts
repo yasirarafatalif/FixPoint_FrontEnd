@@ -13,3 +13,17 @@ export interface TechnicianProfile {
   role: "TECHNICIAN";
   isAvailable: boolean;
 }
+
+
+export interface TechnicianAvailability {
+  day:
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY"
+    | "SATURDAY"
+    | "SUNDAY";
+  startTime: string;
+  endTime: string;
+}

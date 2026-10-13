@@ -208,7 +208,7 @@ export const getTechnicianBookings = async () => {
         data: [],
       };
     }
-    console.log(result.data)
+    console.log(result.data);
 
     return {
       success: true,
@@ -276,8 +276,6 @@ export const updateTechnicianBookingStatus = async (
   }
 };
 
-
-
 export const updateTechnicianProfile = async (data: {
   name?: string;
   phone?: string;
@@ -304,7 +302,7 @@ export const updateTechnicianProfile = async (data: {
         },
         body: JSON.stringify(data),
         cache: "no-store",
-      }
+      },
     );
 
     const result = await response.json();
@@ -327,6 +325,66 @@ export const updateTechnicianProfile = async (data: {
     return {
       success: false,
       message: "Something went wrong",
+    };
+  }
+};
+
+export const updateTechnicianAvailability = async (data: {
+  day: string;
+  startTime: string;
+  endTime: string;
+}) => {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+
+    if (!accessToken) {
+      return { success: false, message: "Please login again." };
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/technician/availability`;
+
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+      cache: "no-store",
+    });
+
+    const text = await response.text();
+
+    let result;
+
+    try {
+      result = JSON.parse(text);
+    } catch {
+      return {
+        success: false,
+        message: `Backend error: HTTP ${response.status}. Terminal-এর Availability response দেখো।`,
+      };
+    }
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || `Request failed: ${response.status}`,
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message || "Availability updated successfully!",
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Availability request failed:", error);
+
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Unknown request error",
     };
   }
 };

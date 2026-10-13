@@ -1,6 +1,8 @@
+
+import Link from "next/link";
 import {
   CalendarCheck,
-  Clock3,
+  ArrowUpRight,
 } from "lucide-react";
 
 interface Props {
@@ -13,30 +15,36 @@ export default function AvailabilityCard({
   isAvailable,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
+    <Link
+      href="/dashboard/technician/availability"
+      className="group block rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg"
+    >
       {/* Header */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-emerald-50 group-hover:text-emerald-600">
+            <CalendarCheck size={19} />
+          </div>
 
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-          <CalendarCheck size={19} />
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">
+              Availability
+            </h2>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Your current working schedule
+            </p>
+          </div>
         </div>
 
-        <div>
-          <h2 className="text-lg font-bold text-slate-900">
-            Availability
-          </h2>
-
-          <p className="mt-1 text-xs text-slate-500">
-            Your current working schedule
-          </p>
-        </div>
-
+        <ArrowUpRight
+          size={19}
+          className="text-slate-400 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-600"
+        />
       </div>
 
       {/* Status */}
       <div className="mt-5">
-
         <span
           className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${
             isAvailable
@@ -44,88 +52,47 @@ export default function AvailabilityCard({
               : "bg-slate-100 text-slate-500"
           }`}
         >
-
           <span
             className={`h-2 w-2 rounded-full ${
-              isAvailable
-                ? "bg-emerald-500"
-                : "bg-slate-400"
+              isAvailable ? "bg-emerald-500" : "bg-slate-400"
             }`}
           />
 
-          {isAvailable
-            ? "Available"
-            : "Unavailable"}
-
+          {isAvailable ? "Available" : "Unavailable"}
         </span>
-
       </div>
 
-      {/* Availability Schedule */}
+      {/* Schedule Preview */}
       {Boolean(availability) && (
         <div className="mt-6 space-y-4">
+          {[
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+          ].map((day) => (
+            <div
+              key={day}
+              className="flex items-center justify-between"
+            >
+              <span className="text-sm text-slate-500">
+                {day}
+              </span>
 
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Monday
-            </span>
-
-            <span className="text-sm font-medium text-slate-700">
-              09:00 - 17:00
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Tuesday
-            </span>
-
-            <span className="text-sm font-medium text-slate-700">
-              09:00 - 17:00
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Wednesday
-            </span>
-
-            <span className="text-sm font-medium text-slate-700">
-              09:00 - 17:00
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Thursday
-            </span>
-
-            <span className="text-sm font-medium text-slate-700">
-              09:00 - 17:00
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Friday
-            </span>
-
-            <span className="text-sm font-medium text-slate-700">
-              09:00 - 17:00
-            </span>
-          </div>
-
+              <span className="text-sm font-medium text-slate-700">
+                09:00 - 17:00
+              </span>
+            </div>
+          ))}
         </div>
       )}
 
-      {/* Manage */}
-      <button
-        type="button"
-        className="mt-6 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
-      >
+      {/* Manage Availability */}
+      <div className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition group-hover:bg-emerald-600">
         Manage Availability
-      </button>
-
-    </div>
+        <ArrowUpRight size={16} />
+      </div>
+    </Link>
   );
 }

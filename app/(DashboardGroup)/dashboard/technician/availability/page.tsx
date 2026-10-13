@@ -1,5 +1,6 @@
-import DashboardPlaceholder from "../../_components/DashboardPlaceholder";
+import AvailabilityForm from "./_components/AvailabilityManager";
 
-export default function TechnicianAvailabilityPage() {
-  return <DashboardPlaceholder eyebrow="Technician workspace" title="Set your availability" description="Choose the days and hours when customers can book your services." backHref="/dashboard/technician" />;
+
+export default function AvailabilityPage() {
+  return <AvailabilityForm/>;
 }
