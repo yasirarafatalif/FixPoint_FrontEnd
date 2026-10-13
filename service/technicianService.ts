@@ -275,3 +275,58 @@ export const updateTechnicianBookingStatus = async (
     };
   }
 };
+
+
+
+export const updateTechnicianProfile = async (data: {
+  name?: string;
+  phone?: string;
+  address?: string;
+}) => {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+
+    if (!accessToken) {
+      return {
+        success: false,
+        message: "Unauthorized",
+      };
+    }
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/manege-profile`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(data),
+        cache: "no-store",
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to update profile",
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Update technician profile error:", error);
+
+    return {
+      success: false,
+      message: "Something went wrong",
+    };
+  }
+};

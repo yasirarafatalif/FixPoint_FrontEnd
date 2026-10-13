@@ -6,8 +6,10 @@ export interface TechnicianProfile {
   profileImage: string;
   address: string;
   bio: string;
+  status: string;
   experience: number;
   location: string;
   skills: string[];
+  role: "TECHNICIAN";
   isAvailable: boolean;
 }
