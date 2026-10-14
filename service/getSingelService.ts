@@ -19,8 +19,6 @@ export const getSingleService = async (serviceId: string) => {
   try {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/services/${serviceId}`;
 
-    console.log("Request URL:", url);
-
     const res = await fetch(
       url,
 

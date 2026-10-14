@@ -1,85 +1,133 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { CreditCard, XCircle, Star } from 'lucide-react';
-import StatusBadge, { Status } from '../_components/StatusBadge';
+import { useEffect, useState } from "react";
 
-// Demo Data
-const bookings = [
-  { id: 'BK-1001', service: 'Deep House Cleaning', date: '2026-08-15', slot: '10:00 AM', status: 'ACCEPTED', price: 1200 },
-  { id: 'BK-1002', service: 'Plumbing Repair', date: '2026-08-12', slot: '02:00 PM', status: 'COMPLETED', price: 500 },
-  { id: 'BK-1003', service: 'Electrical Wiring', date: '2026-08-20', slot: '11:00 AM', status: 'REQUESTED', price: 800 },
-];
+import { getCustomerBookings } from "@/service/bookingService";
+import { CustomerBooking } from "@/types/customerBooking";
+
+import CustomerWelcome from "./_components/CustomerWelcome";
+import DashboardStats from "./_components/DashboardStats";
+import DashboardFeedback from "./_components/DashboardFeedback";
+import DashboardSkeleton from "./_components/DashboardSkeleton";
+import QuickActions from "./_components/QuickActions";
+import RecentBookings from "./_components/RecentBookings";
+import { getPaymentStatus } from "./_components/bookingUtils";
 
 export default function CustomerDashboard() {
+  const [bookings, setBookings] = useState<CustomerBooking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  async function loadBookings() {
+    try {
+      setLoading(true);
+      setError("");
+
+      const result = await getCustomerBookings();
+
+      if (!result.success) {
+        throw new Error(result.message || "Failed to load bookings.");
+      }
+
+      if (!Array.isArray(result.data)) {
+        throw new Error("Invalid booking data received from the server.");
+      }
+
+      setBookings(result.data as CustomerBooking[]);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong while loading bookings."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void loadBookings();
+  }, []);
+
+  const now = Date.now();
+
+  const upcomingBookings = bookings
+    .filter(
+      (booking) =>
+        new Date(booking.bookingDate).getTime() >= now &&
+        ["REQUESTED", "ACCEPTED", "IN_PROGRESS"].includes(
+          booking.status.toUpperCase()
+        )
+    )
+    .sort(
+      (a, b) =>
+        new Date(a.bookingDate).getTime() -
+        new Date(b.bookingDate).getTime()
+    );
+
+  const completedBookings = bookings.filter(
+    (booking) => booking.status.toUpperCase() === "COMPLETED"
+  );
+
+  const pendingPaymentTotal = bookings
+    .filter(
+      (booking) =>
+        ["ACCEPTED", "IN_PROGRESS", "COMPLETED"].includes(
+          booking.status.toUpperCase()
+        ) &&
+        getPaymentStatus(booking) !== "PAID"
+    )
+    .reduce(
+      (total, booking) => total + Number(booking.totalPrice || 0),
+      0
+    );
+
+  const recentBookings = [...bookings]
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt ?? b.bookingDate).getTime() -
+        new Date(a.createdAt ?? a.bookingDate).getTime()
+    )
+    .slice(0, 3);
+
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
-      
-      {/* Header Info */}
-      <div>
-        <h1 className="text-3xl font-bold text-slate-900">Welcome, John Doe!</h1>
-        <p className="text-slate-500 mt-1">Manage your home service bookings and payments.</p>
-      </div>
+    <div className="mx-auto max-w-7xl space-y-8 pb-10">
+      {/* Loading skeleton */}
+      {loading ? (
+        <DashboardSkeleton />
+      ) : error ? (
+        /* Error state with retry */
+        <DashboardFeedback
+          loading={false}
+          error={error}
+          onRetry={() => void loadBookings()}
+        />
+      ) : (
+        /* Dashboard content */
+        <>
+          <CustomerWelcome />
 
-      {/* Booking History Table */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-6 py-5 border-b border-slate-200 bg-slate-50/50">
-          <h2 className="text-lg font-bold text-slate-800">Recent Bookings</h2>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
-                <th className="px-6 py-4 font-semibold">Booking ID</th>
-                <th className="px-6 py-4 font-semibold">Service</th>
-                <th className="px-6 py-4 font-semibold">Schedule</th>
-                <th className="px-6 py-4 font-semibold">Status</th>
-                <th className="px-6 py-4 font-semibold text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {bookings.map((booking) => (
-                <tr key={booking.id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-sm font-semibold text-slate-900">{booking.id}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{booking.service}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">
-                    <div>{booking.date}</div>
-                    <div className="text-xs text-slate-400">{booking.slot}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={booking.status as Status} />
-                  </td>
-                  <td className="px-6 py-4 text-right space-x-3">
-                    
-                    {/* Pay Button for ACCEPTED bookings */}
-                    {booking.status === 'ACCEPTED' && (
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition">
-                        <CreditCard className="w-3.5 h-3.5" /> Pay ৳{booking.price}
-                      </button>
-                    )}
+          <DashboardStats
+            totalBookings={bookings.length}
+            upcomingBookings={upcomingBookings.length}
+            completedBookings={completedBookings.length}
+            pendingPaymentTotal={pendingPaymentTotal}
+            loading={false}
+          />
 
-                    {/* Review Button for COMPLETED bookings */}
-                    {booking.status === 'COMPLETED' && (
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-100 text-amber-700 text-xs font-bold rounded-lg hover:bg-amber-200 transition">
-                        <Star className="w-3.5 h-3.5" /> Leave Review
-                      </button>
-                    )}
+          <section className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+          
 
-                    {/* Cancel Button (Only if not IN_PROGRESS or COMPLETED) */}
-                    {['REQUESTED', 'ACCEPTED', 'PAID'].includes(booking.status) && (
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-red-600 text-xs font-bold rounded-lg hover:bg-red-50 transition">
-                        <XCircle className="w-3.5 h-3.5" /> Cancel
-                      </button>
-                    )}
+            <QuickActions />
+          </section>
 
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+          <RecentBookings
+            bookings={recentBookings}
+            loading={false}
+            error=""
+          />
+        </>
+      )}
     </div>
   );
 }

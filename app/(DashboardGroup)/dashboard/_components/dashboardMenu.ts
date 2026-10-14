@@ -7,6 +7,8 @@ import {
   UserRound,
   type LucideIcon,
   CalendarClock,
+  CreditCard,
+  Star,
 } from "lucide-react";
 
 export type DashboardRole = "CUSTOMER" | "TECHNICIAN" | "ADMIN";
@@ -29,23 +31,63 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
     title: "Customer workspace",
     home: "/dashboard/customer",
     main: [
-      { label: "Overview", href: "/dashboard/customer", icon: LayoutDashboard },
+      {
+        label: "Overview",
+        href: "/dashboard/customer",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "My Bookings",
+        href: "/dashboard/customer/bookings",
+        icon: CalendarDays,
+      },
+      {
+        label: "Payments",
+        href: "/dashboard/customer/payments",
+        icon: CreditCard,
+      },
+      {
+        label: "My Reviews",
+        href: "/dashboard/customer/reviews",
+        icon: Star,
+      },
     ],
+
     secondary: [
-      { label: "My profile", href: "/dashboard/customer/profile", icon: UserRound },
+      {
+        label: "My Profile",
+        href: "/dashboard/customer/profile",
+        icon: UserRound,
+      },
     ],
   },
   TECHNICIAN: {
     title: "Technician workspace",
     home: "/dashboard/technician",
     main: [
-      { label: "Overview", href: "/dashboard/technician", icon: LayoutDashboard },
-      { label: "Bookings", href: "/dashboard/technician/bookings", icon: CalendarDays },
-      { label: "Availability", href: "/dashboard/technician/availability", icon: CalendarClock },
+      {
+        label: "Overview",
+        href: "/dashboard/technician",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "Bookings",
+        href: "/dashboard/technician/bookings",
+        icon: CalendarDays,
+      },
+      {
+        label: "Availability",
+        href: "/dashboard/technician/availability",
+        icon: CalendarClock,
+      },
       // { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound }
     ],
     secondary: [
-      { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound },
+      {
+        label: "My profile",
+        href: "/dashboard/technician/profile",
+        icon: UserRound,
+      },
     ],
   },
   ADMIN: {
@@ -55,10 +97,18 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
       { label: "Users", href: "/dashboard/admin/users", icon: Users },
       { label: "Categories", href: "/dashboard/admin/categories", icon: Tags },
-      { label: "Bookings", href: "/dashboard/admin/bookings", icon: CalendarDays },
+      {
+        label: "Bookings",
+        href: "/dashboard/admin/bookings",
+        icon: CalendarDays,
+      },
     ],
     secondary: [
-      { label: "Platform settings", href: "/dashboard/admin/settings", icon: Settings },
+      {
+        label: "Platform settings",
+        href: "/dashboard/admin/settings",
+        icon: Settings,
+      },
     ],
   },
 };
