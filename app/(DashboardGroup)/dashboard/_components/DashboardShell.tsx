@@ -130,7 +130,7 @@ export default function DashboardShell({
           className={`flex h-[73px] items-center border-b border-slate-100 px-5 ${collapsed ? "lg:justify-center" : "justify-between"}`}
         >
           <Link
-            href={menu.home}
+            href="/"
             className="flex items-center gap-3 overflow-hidden"
           >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white">

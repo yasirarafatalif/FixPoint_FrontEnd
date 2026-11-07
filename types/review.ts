@@ -19,3 +19,14 @@ export interface Review {
   createdAt: string;
   updatedAt: string;
 }
+
+
+
+export type Booking = {
+  id: string;
+  status: string;
+  service?: {
+    title?: string;
+    name?: string;
+  } | null;
+};

@@ -6,18 +6,15 @@ import ServicesClient from "./_components/ServicesClient";
 export default async function ServicesPage() {
   const result = await getAllServices();
   const categoriesResult = await getCategories();
-  console.log(result.data)
-  // console.log(categoriesResult.data)
-
 
   const services = Array.isArray(result?.data) ? result?.data : [];
- const categories = Array.isArray(categoriesResult?.data)
-  ? categoriesResult.data
-  : Array.isArray(categoriesResult?.data)
-  ? categoriesResult.data
-  : Array.isArray(categoriesResult)
-  ? categoriesResult
-  : [];
+  const categories = Array.isArray(categoriesResult?.data)
+    ? categoriesResult.data
+    : Array.isArray(categoriesResult?.data)
+      ? categoriesResult.data
+      : Array.isArray(categoriesResult)
+        ? categoriesResult
+        : [];
 
   return (
     <main className="min-h-screen bg-slate-50">

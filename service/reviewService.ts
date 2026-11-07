@@ -1,4 +1,3 @@
-
 "use server";
 
 import { cookies } from "next/headers";
@@ -50,6 +49,54 @@ export async function submitCustomerReview(payload: {
     return {
       success: false,
       message: "Something went wrong. Please try again.",
+    };
+  }
+}
+
+export async function getMyReviews() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      return {
+        success: false,
+        message: "Please log in to view your reviews.",
+        data: [],
+      };
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+
+    const res = await fetch(`${baseUrl}/api/reviews`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch reviews.",
+        data: [],
+      };
+    }
+    console.log(result)
+
+    return {
+      success: true,
+      message: result.message || "Reviews fetched successfully.",
+      data: result.data,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Something went wrong.",
+      data: [],
     };
   }
 }

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -11,6 +10,7 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { createBooking } from "@/service/bookingService";
+import { checkUserBlockStatus } from "@/service/users.services";
 
 interface Service {
   id: string;
@@ -34,9 +34,7 @@ export default function BookingCard({
   const [selectedService, setSelectedService] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  const [customerNote, setCustomerNote] = useState(
-    "Please arrive on time.",
-  );
+  const [customerNote, setCustomerNote] = useState("Please arrive on time.");
   const [submitting, setSubmitting] = useState(false);
 
   const activeServices =
@@ -115,6 +113,30 @@ export default function BookingCard({
     setSubmitting(true);
 
     try {
+      // Step 1: Check user block status
+      const blockStatus = await checkUserBlockStatus()
+
+      if (!blockStatus.success) {
+        throw new Error(
+          blockStatus.message || "Unable to verify your account status.",
+        );
+      }
+
+      // Step 2: Stop booking if user is blocked
+      if (blockStatus.isBlocked || blockStatus.data?.status === "BLOCKED") {
+        await Swal.fire({
+          icon: "error",
+          title: "Booking Restricted!",
+          text:
+            blockStatus.message ||
+            "Your account has been restricted. Please contact support.",
+          confirmButtonColor: "#dc2626",
+        });
+
+        return;
+      }
+
+      // Step 3: Continue booking if user is unblocked
       const result = await createBooking({
         serviceId: selectedService,
         bookingDate: selectedDateTime.toISOString(),
@@ -256,8 +278,8 @@ export default function BookingCard({
         </select>
 
         <p className="mt-2 text-xs text-slate-400">
-          Choose your preferred hourly slot. The server will
-          reject a time that is already booked.
+          Choose your preferred hourly slot. The server will reject a time that
+          is already booked.
         </p>
       </div>
 
@@ -329,8 +351,8 @@ export default function BookingCard({
       </button>
 
       <p className="mt-4 text-center text-xs leading-5 text-slate-400">
-        Your booking will be checked against existing bookings
-        before it is saved.
+        Your booking will be checked against existing bookings before it is
+        saved.
       </p>
     </div>
   );

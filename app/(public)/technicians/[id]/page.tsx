@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import TechnicianProfileClient from "../_components/TechnicianProfileClient";
 import { getTechnician } from "@/service/getTechnician";
 
-
+export const metadata = {
+  title: "Technician Profile",
+  description: "View technician details and availability",
+};
 
 export default async function TechnicianPage({
   params,
