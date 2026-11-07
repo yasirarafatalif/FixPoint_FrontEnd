@@ -1,37 +1,23 @@
 "use client";
 
-import {
-  CalendarDays,
-  Eye,
-  Mail,
-  UserRound,
-} from "lucide-react";
+import { CalendarDays, Eye, Mail, UserRound } from "lucide-react";
 
-import type {
-  AdminBooking,
-  BookingStatus,
-} from "@/types/adminBooking";
+import type { AdminBooking, BookingStatus } from "@/types/adminBooking";
 
 interface BookingTableProps {
   bookings: AdminBooking[];
 }
 
-export default function BookingTable({
-  bookings,
-}: BookingTableProps) {
+export default function BookingTable({ bookings }: BookingTableProps) {
+  console.log(bookings)
   if (bookings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100">
-          <CalendarDays
-            size={22}
-            className="text-slate-400"
-          />
+          <CalendarDays size={22} className="text-slate-400" />
         </div>
 
-        <h3 className="font-semibold text-slate-900">
-          No bookings found
-        </h3>
+        <h3 className="font-semibold text-slate-900">No bookings found</h3>
 
         <p className="mt-1 text-sm text-slate-500">
           Try changing your search or status filter.
@@ -77,10 +63,7 @@ export default function BookingTable({
 
         <tbody className="divide-y divide-slate-100">
           {bookings.map((booking) => (
-            <tr
-              key={booking.id}
-              className="transition hover:bg-slate-50/70"
-            >
+            <tr key={booking.id} className="transition hover:bg-slate-50/70">
               {/* Service */}
               <td className="px-5 py-4">
                 <div>
@@ -132,9 +115,7 @@ export default function BookingTable({
                 <div className="flex items-center gap-1.5 text-sm text-slate-600">
                   <CalendarDays size={14} />
 
-                  {new Date(
-                    booking.bookingDate
-                  ).toLocaleDateString("en-US", {
+                  {new Date(booking.bookingDate).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
@@ -151,9 +132,7 @@ export default function BookingTable({
 
               {/* Status */}
               <td className="px-5 py-4">
-                <BookingStatusBadge
-                  status={booking.status}
-                />
+                <BookingStatusBadge status={booking.status} />
               </td>
 
               {/* Action */}
@@ -175,20 +154,21 @@ export default function BookingTable({
   );
 }
 
-function BookingStatusBadge({
-  status,
-}: {
-  status: BookingStatus;
-}) {
-  const styles = {
-    PENDING:
-      "border-amber-100 bg-amber-50 text-amber-700",
-    CONFIRMED:
-      "border-blue-100 bg-blue-50 text-blue-700",
-    COMPLETED:
-      "border-emerald-100 bg-emerald-50 text-emerald-700",
-    CANCELLED:
-      "border-red-100 bg-red-50 text-red-700",
+function BookingStatusBadge({ status }: { status: BookingStatus }) {
+  const styles: Record<string, string> = {
+    REQUESTED: "border-amber-100 bg-amber-50 text-amber-700",
+
+    ACCEPTED: "border-blue-100 bg-blue-50 text-blue-700",
+
+    DECLINED: "border-red-100 bg-red-50 text-red-700",
+
+    PAID: "border-purple-100 bg-purple-50 text-purple-700",
+
+    IN_PROGRESS: "border-emerald-100 bg-emerald-50 text-emerald-700",
+
+    COMPLETED: "border-gray-200 bg-gray-100 text-gray-700",
+
+    CANCELLED: "border-red-200 bg-red-100 text-red-800",
   };
 
   return (

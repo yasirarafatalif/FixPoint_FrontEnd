@@ -3,6 +3,7 @@ import BookingsClient from "./BookingsClient";
 
 export default async function AdminBookingsPage() {
   const result = await getAllAdminBookings();
+ 
 
   if (!result.success) {
     return (

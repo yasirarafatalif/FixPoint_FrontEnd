@@ -69,3 +69,47 @@ export const loginAction = async (
 
   return result;
 };
+
+
+type RegisterPayload = {
+  name: string;
+  email: string;
+  password: string;
+  role: "CUSTOMER";
+};
+
+export const registerAction = async (payload: RegisterPayload) => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+        cache: "no-store",
+      }
+    );
+
+    const result = await res.json();
+
+    return {
+      success: res.ok,
+      statusCode: res.status,
+      message: result.message || (
+        res.ok
+          ? "Registration successful"
+          : "Registration failed"
+      ),
+      data: result.data ?? null,
+    };
+  } catch {
+    return {
+      success: false,
+      statusCode: 500,
+      message: "Unable to connect to the server. Please try again.",
+      data: null,
+    };
+  }
+};
