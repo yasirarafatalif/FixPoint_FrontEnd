@@ -1,4 +1,3 @@
-
 "use server";
 
 import { cookies } from "next/headers";
@@ -24,18 +23,15 @@ export async function createPayment(bookingId: string) {
       };
     }
 
-    const response = await fetch(
-      `${baseUrl}/api/payments/create`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ bookingId }),
-        cache: "no-store",
+    const response = await fetch(`${baseUrl}/api/payments/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-    );
+      body: JSON.stringify({ bookingId }),
+      cache: "no-store",
+    });
 
     const result = await response.json();
 
@@ -47,9 +43,7 @@ export async function createPayment(bookingId: string) {
     }
 
     // Backend service returns { paymentUrl: ... }.
-    const paymentUrl =
-      result.data?.paymentUrl ??
-      result.paymentUrl;
+    const paymentUrl = result.data?.paymentUrl ?? result.paymentUrl;
 
     if (!paymentUrl) {
       console.error("Payment API response:", result);
@@ -73,7 +67,6 @@ export async function createPayment(bookingId: string) {
     };
   }
 }
-
 
 
 export async function getMyPayments() {
@@ -103,6 +96,7 @@ export async function getMyPayments() {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       cache: "no-store",
     });
@@ -117,7 +111,12 @@ export async function getMyPayments() {
       };
     }
 
-    const payments = Array.isArray(result.data) ? result.data : [];
+    // Support both { data: [] } and { data: { data: [] } }
+    const payments = Array.isArray(result.data)
+      ? result.data
+      : Array.isArray(result.data?.data)
+        ? result.data.data
+        : [];
 
     return {
       success: true,
@@ -134,4 +133,3 @@ export async function getMyPayments() {
     };
   }
 }
-
