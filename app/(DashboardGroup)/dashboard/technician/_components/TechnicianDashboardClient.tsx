@@ -2,10 +2,10 @@
 
 import type { TechnicianProfile } from "@/types/technician";
 
-import TechnicianStats from "./_components/TechnicianStats";
-import TechnicianProfileCard from "./_components/TechnicianProfileCard";
-import AvailabilityCard from "./_components/AvailabilityCard";
-import RecentBookings from "./_components/RecentBookings";
+import TechnicianStats from "./TechnicianStats";
+import TechnicianProfileCard from "./TechnicianProfileCard";
+import AvailabilityCard from "./AvailabilityCard";
+import RecentBookings from "./RecentBookings";
 import { TechnicianBooking } from "@/types/technicianBooking";
 import { User } from "@/types/user";
 

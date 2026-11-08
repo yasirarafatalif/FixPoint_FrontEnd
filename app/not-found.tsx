@@ -1,4 +1,8 @@
 import Link from "next/link";
+export const metadata = {
+  title: "FixitNow | Page Not Found",
+  description: "404 page for FixPoint",
+};
 
 export default function NotFound() {
   return (

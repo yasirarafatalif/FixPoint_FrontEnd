@@ -1,5 +1,6 @@
 "use server";
 
+import { UserRole } from "@/lib/auth";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -75,10 +76,11 @@ type RegisterPayload = {
   name: string;
   email: string;
   password: string;
-  role: "CUSTOMER";
+  role: UserRole;
 };
 
 export const registerAction = async (payload: RegisterPayload) => {
+  console.log(payload)
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,

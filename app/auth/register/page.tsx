@@ -1,4 +1,8 @@
 import RegisterForm from "./_components/RegisterForm";
+export const metadata ={
+  title: "FixtNow | Register page",
+  description: "Register page for FixPoint",
+}
 
 
 

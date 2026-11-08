@@ -79,68 +79,6 @@ export const createBooking = async (
 
 
 
-// export const  getCustomerBookings = async()=> {
-//   try {
-//     const cookieStore = await cookies();
-//     const accessToken = cookieStore.get("accessToken")?.value;
-
-//     if (!accessToken) {
-//       return {
-//         success: false,
-//         message: "Please log in to view your bookings.",
-//         data: [],
-//       };
-//     }
-
-//     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
-
-//     if (!baseUrl) {
-//       throw new Error("NEXT_PUBLIC_API_URL is not configured.");
-//     }
-
-//     const response = await fetch(`${baseUrl}/api/bookings`, {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//         "Content-Type": "application/json",
-//       },
-//       cache: "no-store",
-//     });
-
-//     const result = await response.json();
-
-
-//     if (!response.ok || result.success === false) {
-//       return {
-//         success: false,
-//         message: result.message || "Failed to load bookings.",
-//         data: [],
-//       };
-//     }
-
-    
-//     const bookings = Array.isArray(result.data)
-//       ? result.data
-//       : Array.isArray(result.data?.data)
-//         ? result.data.data
-//         : [];
-
-//     return {
-//       success: true,
-//       message: result.message || "Bookings loaded successfully.",
-//       data: bookings,
-//     };
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message:
-//         error instanceof Error
-//           ? error.message
-//           : "Something went wrong.",
-//       data: [],
-//     };
-//   }
-// }
 
 export const getCustomerBookings = async () => {
   try {

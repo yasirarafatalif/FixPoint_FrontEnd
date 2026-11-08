@@ -26,6 +26,8 @@ export default function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState<"CUSTOMER" | "TECHNICIAN">("CUSTOMER");
+  
 
   // UI states
   const [isLoading, setIsLoading] = useState(false);
@@ -78,10 +80,12 @@ export default function RegisterForm() {
         name: name.trim(),
         email: email.trim(),
         password,
-        role: "CUSTOMER",
+        role
       });
+  
 
       if (!result.success) {
+        toast.error(result.message);
         throw new Error(result.message);
       }
 
@@ -135,6 +139,70 @@ export default function RegisterForm() {
           <span>{errorMessage}</span>
         </div>
       )}
+      {/* Account Type Selection */}
+      <div className="space-y-3">
+        <label className="text-sm font-semibold text-slate-700">
+          Select Account Type
+        </label>
+
+        <div className="grid grid-cols-2 gap-3">
+          {/* Customer */}
+          <button
+            type="button"
+            onClick={() => setRole("CUSTOMER")}
+            className={`rounded-xl border-2 p-4 text-left transition-all ${
+              role === "CUSTOMER"
+                ? "border-blue-600 bg-blue-50"
+                : "border-slate-200 bg-white hover:border-blue-300"
+            }`}
+          >
+            <User
+              size={23}
+              className={
+                role === "CUSTOMER" ? "text-blue-600" : "text-slate-400"
+              }
+            />
+
+            <h3 className="mt-2 font-semibold text-slate-900">Customer</h3>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Book home services easily.
+            </p>
+
+            {role === "CUSTOMER" && (
+              <CheckCircle2 size={18} className="mt-3 text-blue-600" />
+            )}
+          </button>
+
+          {/* Technician */}
+          <button
+            type="button"
+            onClick={() => setRole("TECHNICIAN")}
+            className={`rounded-xl border-2 p-4 text-left transition-all ${
+              role === "TECHNICIAN"
+                ? "border-blue-600 bg-blue-50"
+                : "border-slate-200 bg-white hover:border-blue-300"
+            }`}
+          >
+            <UserCheck
+              size={23}
+              className={
+                role === "TECHNICIAN" ? "text-blue-600" : "text-slate-400"
+              }
+            />
+
+            <h3 className="mt-2 font-semibold text-slate-900">Technician</h3>
+
+            <p className="mt-1 text-xs text-slate-500">
+              Provide services and earn.
+            </p>
+
+            {role === "TECHNICIAN" && (
+              <CheckCircle2 size={18} className="mt-3 text-blue-600" />
+            )}
+          </button>
+        </div>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Full Name */}

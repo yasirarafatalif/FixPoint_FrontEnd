@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import type { TechnicianProfile } from "@/types/technician";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 interface DecodedToken {
   id: string;
@@ -388,3 +389,61 @@ export const updateTechnicianAvailability = async (data: {
     };
   }
 };
+
+export async function TechnicianProfileSet(payload: TechnicianProfile) {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if (!token) {
+      return {
+        success: false,
+        message: "Unauthorized! Please login first.",
+        data: null,
+      };
+    }
+
+    if (!API_URL) {
+      return {
+        success: false,
+        message: "API URL is not configured.",
+        data: null,
+      };
+    }
+
+    const response = await fetch(`${API_URL}/api/technician/profile`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+
+    const result = await response.json();
+    console.log(result)
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to setup technician profile.",
+        data: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: result.message || "Technician profile setup successful.",
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Technician profile setup error:", error);
+
+    return {
+      success: false,
+      message: "Something went wrong while setting up your profile.",
+      data: null,
+    };
+  }
+}

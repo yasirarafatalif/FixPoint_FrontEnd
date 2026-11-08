@@ -1,5 +1,10 @@
 import LoginForm from "../_components/LoginFrom";
 
+export const metadata={
+  title:"FixitNow | Login page",
+  description:"Login page for FixPoint"
+}
+
 
 export default function LoginPage() {
   return (
