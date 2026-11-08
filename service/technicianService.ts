@@ -447,3 +447,167 @@ export async function TechnicianProfileSet(payload: TechnicianProfile) {
     };
   }
 }
+
+
+export async function TechnicianGetCategories() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    if(!token) {
+      return {
+        success: false,
+        message: "Unauthorized! Please login first.",
+        data: null,
+      };
+    }
+
+    if(!API_URL) {
+      return {
+        success: false,
+        message: "API URL is not configured.",
+        data: null,
+      };
+    }
+
+    const response = await fetch(`${API_URL}/api/categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+
+    const result = await response.json();
+
+    if(!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch technician categories.",
+        data: null,
+      };
+    }   
+
+    return {
+      success: true,
+      message: result.message || "Technician categories fetched successfully.",
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Technician categories fetch error:", error); 
+    return {
+      success: false,
+      message: "Something went wrong while fetching technician categories.",
+      data: null,
+    };
+  }
+}
+
+export async function TechnicianGetServices() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+    if(!token) {
+      return {
+        success: false,
+        message: "Unauthorized! Please login first.",
+        data: null,
+      };
+    }
+    if(!API_URL) { 
+      return {
+        success: false,
+        message: "API URL is not configured.",
+        data: null,
+      };
+    }
+    const response = await fetch(`${API_URL}/api/technician/services`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      cache: "no-store",
+    });
+    const result = await response.json();
+    if(!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch technician services.",
+        data: null,
+      };
+    }
+    return {
+      success: true,
+      message: result.message || "Technician services fetched successfully.",
+      data: result.data,
+    };
+
+  }catch (error) {
+    console.error("Technician services fetch error:", error);
+    return {
+      success: false,
+      message: "Something went wrong while fetching technician services.",
+      data: null,
+    };
+  }
+}
+
+export async function TechnicianCreateService(payload: {
+  title: string;
+  description: string;  
+  price: number;
+  duration: number;
+  categoryId: string;
+}) {
+  try {
+    const cookieStore = await cookies();  
+    const token = cookieStore.get("accessToken")?.value;
+    if(!token) {
+      return {
+        success: false,
+        message: "Unauthorized! Please login first.",
+        data: null,
+      };
+    }
+    if(!API_URL) {
+      return {
+        success: false,
+        message: "API URL is not configured.",
+        data: null,
+      };
+    }
+
+    const response = await fetch(`${API_URL}/api/services`, {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },  
+      body: JSON.stringify(payload),
+      cache: "no-store",
+    });
+    const result = await response.json();
+    
+    if(!response.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to create technician service.",
+        data: null,
+      };
+    } 
+    return {
+      success: true,
+      message: result.message || "Technician service created successfully.",
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Technician service creation error:", error);
+    return {
+      success: false,
+      message: "Something went wrong while creating technician service.",
+      data: null,
+    };
+  }
+}

@@ -9,6 +9,8 @@ import {
   CalendarClock,
   CreditCard,
   Star,
+  Wrench,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 export type DashboardRole = "CUSTOMER" | "TECHNICIAN" | "ADMIN";
@@ -69,6 +71,11 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
         label: "Overview",
         href: "/dashboard/technician",
         icon: LayoutDashboard,
+      },
+      {
+        label: "Services",
+        href: "/dashboard/technician/services",
+        icon: BriefcaseBusiness,
       },
       {
         label: "Bookings",

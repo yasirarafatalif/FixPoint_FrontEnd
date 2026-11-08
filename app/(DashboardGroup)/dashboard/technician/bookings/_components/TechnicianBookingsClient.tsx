@@ -8,8 +8,8 @@ import type {
   TechnicianBookingStatus,
 } from "@/types/technicianBooking";
 
-import BookingStats from "./_components/BookingStats";
-import BookingTable from "./_components/BookingTable";
+import BookingStats from "./BookingStats";
+import BookingTable from "./BookingTable";
 
 interface Props {
   bookings: TechnicianBooking[];
