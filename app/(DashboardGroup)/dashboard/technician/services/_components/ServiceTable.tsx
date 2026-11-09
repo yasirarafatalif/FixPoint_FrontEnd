@@ -7,12 +7,17 @@ import {
 } from "lucide-react";
 
 import type { Service } from "./ServicesClient";
+import { toast } from "sonner";
 
 type Props = {
   services: Service[];
 };
 
 const ServiceTable = ({ services }: Props) => {
+  const handleEdit = (serviceId: string) => {
+    // Handle edit action for the service with the given serviceId
+    toast.info("Edit functionality is coming soon!");
+  }
   return (
     <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-200 p-5">
@@ -84,18 +89,11 @@ const ServiceTable = ({ services }: Props) => {
 
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <button
-                        type="button"
-                        disabled
-                        title="View coming soon"
-                        className="rounded-lg p-2 text-slate-500 transition hover:bg-blue-50 hover:text-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        <Eye size={17} />
-                      </button>
 
                       <button
                         type="button"
-                        disabled
+                        onClick={() => handleEdit(service.id)}
+                        
                         title="Edit coming soon"
                         className="rounded-lg p-2 text-slate-500 transition hover:bg-amber-50 hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-50"
                       >
@@ -104,7 +102,8 @@ const ServiceTable = ({ services }: Props) => {
 
                       <button
                         type="button"
-                        disabled
+                        onClick={() => handleEdit(service.id)}
+                        
                         title="Delete coming soon"
                         className="rounded-lg p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
                       >

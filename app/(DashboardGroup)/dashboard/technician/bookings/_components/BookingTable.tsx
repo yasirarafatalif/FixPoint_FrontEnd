@@ -184,7 +184,7 @@ export default function BookingTable({ bookings }: Props) {
                           handleStatusChange(booking.id, "ACCEPTED")
                         }
                         title="Confirm booking"
-                        className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-100"
+                        className="rounded-lg border-blue-100 bg-blue-50 text-blue-700 px-3 py-2 text-sm font-semibold  transition hover:bg-blue-100"
                       >
                         Accept
                       </button>
@@ -286,17 +286,19 @@ export default function BookingTable({ bookings }: Props) {
 }
 
 function StatusBadge({ status }: { status: TechnicianBookingStatus }) {
-  const styles = {
+  const styles: Record<TechnicianBookingStatus, string> = {
     PENDING: "border-amber-100 bg-amber-50 text-amber-700",
-    REQUESTED: "border-amber-100 bg-amber-50 text-amber-700",
+    REQUESTED: "border-amber-200 bg-amber-50 text-amber-700",
 
     ACCEPTED: "border-blue-100 bg-blue-50 text-blue-700",
+    CONFIRMED: "border-blue-100 bg-blue-50 text-blue-700",
 
-    COMPLETED: "border-emerald-100 bg-emerald-50 text-emerald-700",
-    IN_PROGRESS: "border-emerald-100 bg-emerald-50 text-emerald-700",
-    PAID: "border-emerald-100 bg-emerald-50 text-emerald-700",
+    COMPLETED: "border-gray-200 bg-gray-100 text-gray-700",
+    IN_PROGRESS: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    PAID: "border-purple-200 bg-purple-50 text-purple-700",
 
-    DECLINED: "border-red-100 bg-red-50 text-red-700",
+    DECLINED: "border-red-200 bg-red-50 text-red-700",
+    CANCELLED: "border-red-300 bg-red-100 text-red-900",
   };
 
   return (
@@ -307,3 +309,7 @@ function StatusBadge({ status }: { status: TechnicianBookingStatus }) {
     </span>
   );
 }
+
+
+
+
