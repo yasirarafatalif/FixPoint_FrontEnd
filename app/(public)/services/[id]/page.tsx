@@ -10,6 +10,11 @@ import ServiceFeatures from "../_components/ServiceFeatures";
 import ServiceBookingCard from "../_components/ServiceBookingCard";
 import { getSingleService } from "@/service/getAllServices";
 
+export const metadata = {
+  title: "FixtItNow | Service Details",
+  description: "View service details and book appointments with skilled technicians",
+};
+
 export interface Technician {
   id: string;
   bio: string;

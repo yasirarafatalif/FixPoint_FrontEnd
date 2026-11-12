@@ -14,8 +14,7 @@ import {
 } from "lucide-react";
 import Swal from "sweetalert2";
 
-import { updateTechnicianProfile } from "@/service/technicianService";
-import type { UserUpdateProfile } from "@/types/user";
+import type { UserUpdateProfile ,User} from "@/types/user";
 
 import ProfilePageHeader from "./ProfilePageHeader";
 import ProfileHeader from "./ProfileHeader";
@@ -25,11 +24,15 @@ import AccountInformation from "./AccountInformation";
 import { uploadImage } from "@/lib/uploadImage";
 import { updateUserProfile } from "@/service/users.services";
 
+// interface Props {
+//   profile: UserUpdateProfile;
+// }
 interface Props {
-  profile: UserUpdateProfile;
+  profile: User;
 }
 
-export default function TechnicianProfileForm({ profile }: Props) {
+export default function ProfileUpdateForm({ profile }: Props) {
+  // console.log("formprofile update form page",profile);
   const router = useRouter();
 
   const [editing, setEditing] = useState(false);

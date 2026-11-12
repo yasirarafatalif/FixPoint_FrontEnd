@@ -17,6 +17,10 @@ interface CategoryTableProps {
 export default function CategoryTable({
   categories,
 }: CategoryTableProps) {
+
+  const handleEditCategory = (categoryId: string) => {
+    
+  }
   if (categories.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-16 text-center">

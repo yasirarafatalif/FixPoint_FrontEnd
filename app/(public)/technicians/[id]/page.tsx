@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import TechnicianProfileClient from "../_components/TechnicianProfileClient";
-import { getTechnician } from "@/service/getTechnician";
+import { getTechnician } from "@/service/technicianService";
 
 export const metadata = {
-  title: "Technician Profile",
+  title: "FixtItNow | Technician Profile",
   description: "View technician details and availability",
 };
 
@@ -13,14 +13,7 @@ export default async function TechnicianPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-
   const technician = await getTechnician(id);
 
-  if (!technician) {
-    notFound();
-  }
-
-  return (
-    <TechnicianProfileClient technician={technician} />
-  );
+  return <TechnicianProfileClient technician={technician.data} />;
 }

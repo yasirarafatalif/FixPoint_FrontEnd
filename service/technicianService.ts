@@ -21,6 +21,36 @@ interface DecodedToken {
   role: string;
 }
 
+export const getTechnician = async (technicianId: string) => {
+  try {
+    const res = await fetch(`${API_URL}/api/technician/${technicianId}`, {
+      method: "GET",
+      cache: "no-store",
+    });
+    const result = await res.json();
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: result.message || "Failed to fetch technician",
+        data: null,
+      };
+    }
+    return {
+      success: true,
+      message: result.message,
+      data: result.data,
+    };
+  } catch (error) {
+    console.error("Failed to fetch technician:", error);
+    return {
+      success: false,
+      message: "Something went wrong",
+      data: null,
+    };
+  }
+};
+
 export const technicianGetProfile = async () => {
   try {
     const cookieStore = await cookies();
@@ -422,7 +452,7 @@ export async function TechnicianProfileSet(payload: TechnicianProfile) {
     });
 
     const result = await response.json();
-    console.log(result)
+    console.log(result);
 
     if (!response.ok) {
       return {
@@ -448,13 +478,12 @@ export async function TechnicianProfileSet(payload: TechnicianProfile) {
   }
 }
 
-
 export async function TechnicianGetCategories() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
 
-    if(!token) {
+    if (!token) {
       return {
         success: false,
         message: "Unauthorized! Please login first.",
@@ -462,7 +491,7 @@ export async function TechnicianGetCategories() {
       };
     }
 
-    if(!API_URL) {
+    if (!API_URL) {
       return {
         success: false,
         message: "API URL is not configured.",
@@ -481,13 +510,13 @@ export async function TechnicianGetCategories() {
 
     const result = await response.json();
 
-    if(!response.ok) {
+    if (!response.ok) {
       return {
         success: false,
         message: result.message || "Failed to fetch technician categories.",
         data: null,
       };
-    }   
+    }
 
     return {
       success: true,
@@ -495,7 +524,7 @@ export async function TechnicianGetCategories() {
       data: result.data,
     };
   } catch (error) {
-    console.error("Technician categories fetch error:", error); 
+    console.error("Technician categories fetch error:", error);
     return {
       success: false,
       message: "Something went wrong while fetching technician categories.",
@@ -508,14 +537,14 @@ export async function TechnicianGetServices() {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
-    if(!token) {
+    if (!token) {
       return {
         success: false,
         message: "Unauthorized! Please login first.",
         data: null,
       };
     }
-    if(!API_URL) { 
+    if (!API_URL) {
       return {
         success: false,
         message: "API URL is not configured.",
@@ -531,7 +560,7 @@ export async function TechnicianGetServices() {
       cache: "no-store",
     });
     const result = await response.json();
-    if(!response.ok) {
+    if (!response.ok) {
       return {
         success: false,
         message: result.message || "Failed to fetch technician services.",
@@ -543,8 +572,7 @@ export async function TechnicianGetServices() {
       message: result.message || "Technician services fetched successfully.",
       data: result.data,
     };
-
-  }catch (error) {
+  } catch (error) {
     console.error("Technician services fetch error:", error);
     return {
       success: false,
@@ -556,22 +584,22 @@ export async function TechnicianGetServices() {
 
 export async function TechnicianCreateService(payload: {
   title: string;
-  description: string;  
+  description: string;
   price: number;
   duration: number;
   categoryId: string;
 }) {
   try {
-    const cookieStore = await cookies();  
+    const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
-    if(!token) {
+    if (!token) {
       return {
         success: false,
         message: "Unauthorized! Please login first.",
         data: null,
       };
     }
-    if(!API_URL) {
+    if (!API_URL) {
       return {
         success: false,
         message: "API URL is not configured.",
@@ -581,22 +609,22 @@ export async function TechnicianCreateService(payload: {
 
     const response = await fetch(`${API_URL}/api/services`, {
       method: "POST",
-      headers: { 
+      headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-      },  
+      },
       body: JSON.stringify(payload),
       cache: "no-store",
     });
     const result = await response.json();
-    
-    if(!response.ok) {
+
+    if (!response.ok) {
       return {
         success: false,
         message: result.message || "Failed to create technician service.",
         data: null,
       };
-    } 
+    }
     return {
       success: true,
       message: result.message || "Technician service created successfully.",

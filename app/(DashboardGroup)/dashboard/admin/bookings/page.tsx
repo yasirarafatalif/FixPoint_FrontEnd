@@ -1,6 +1,13 @@
 import { getAllAdminBookings } from "@/service/adminBookingService";
 import BookingsClient from "./BookingsClient";
 
+export const metadata = {
+  title: "FixItNow | Bookings Management Page",
+  description: "Manage and oversee all bookings in the FixItNow platform.",
+};
+
+export const dynamic = "force-dynamic";
+
 export default async function AdminBookingsPage() {
   const result = await getAllAdminBookings();
  

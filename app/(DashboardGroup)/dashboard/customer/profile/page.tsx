@@ -1,5 +1,20 @@
-import DashboardPlaceholder from "../../_components/DashboardPlaceholder";
 
-export default function CustomerProfilePage() {
-  return <DashboardPlaceholder eyebrow="Customer account" title="Your profile" description="Review and update your account information from this workspace." backHref="/dashboard/customer" />;
-}
+import { getMe } from "@/service/getme";
+import ProfileUpdateForm from "../../_components/shared/ProfileUpdateFrom";
+
+
+export const metadata = {
+  title: "FixItNow | User Profile",
+  description: "Manage your user profile.",
+};
+
+const CustomerProfilePage = async () => {
+  const profile = await getMe();
+  // console.log(profile.data.data)
+
+  if (!profile.data) return null;
+
+  return <ProfileUpdateForm profile={profile.data.data} />;
+};
+
+export default CustomerProfilePage;

@@ -1,6 +1,13 @@
 import { getAllAdminUsers } from "@/service/adminUserService";
 import UsersClient from "./UsersClient";
 
+export const metadata = {
+  title: "FixItNow | Users Management Page",
+  description: "Manage and oversee all users in the FixItNow platform.",
+};
+
+export const dynamic = "force-dynamic";
+
 
 export default async function AdminUsersPage() {
   const response = await getAllAdminUsers();

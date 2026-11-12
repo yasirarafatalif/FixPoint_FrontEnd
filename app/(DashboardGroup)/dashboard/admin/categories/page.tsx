@@ -1,6 +1,11 @@
 import { getAllAdminCategories } from "@/service/adminCategoryService";
 import CategoriesClient from "./CategoriesClient";
 
+export const metadata = {
+  title: "FixItNow | Categories Management Page",
+  description: "Manage and oversee all categories in the FixItNow platform.",
+};
+
 export default async function CategoriesPage() {
   const result = await getAllAdminCategories();
   // console.log(result)

@@ -3,6 +3,11 @@ import { getCategories } from "@/service/getCategories";
 import type { Service as ServicesClientService } from "@/types/servicesTypes";
 import ServicesClient from "./_components/ServicesClient";
 
+export const metadata = { 
+  title: "FixtItNow | Services",
+  description: "Browse and book services from skilled technicians",
+};
+
 export default async function ServicesPage() {
   const result = await getAllServices();
   const categoriesResult = await getCategories();

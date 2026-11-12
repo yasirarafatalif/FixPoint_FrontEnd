@@ -5,10 +5,14 @@ import {
   Wrench,
 } from "lucide-react";
 
-import { Service } from "./ServiceCard";
-
 interface Props {
-  technician: Service["technician"];
+  technician: {
+    isAvailable: boolean;
+    bio: string;
+    experience: number;
+    location: string;
+    skills: string[];
+  };
 }
 
 export default function TechnicianCard({

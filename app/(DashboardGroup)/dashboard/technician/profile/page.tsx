@@ -1,5 +1,6 @@
 import { getTechnicianProfile } from "@/service/technicianService";
-import TechnicianProfileForm from "./_components/TechnicianProfileForm";
+import ProfileUpdateForm from "../../_components/shared/ProfileUpdateFrom";
+import { getMe } from "@/service/getme";
 
 export const metadata = {
   title: "FixItNow | Technician Profile",
@@ -7,11 +8,12 @@ export const metadata = {
 };
 
 const TechnicianProfilePage = async () => {
-  const profile = await getTechnicianProfile();
+  const profile = await getMe();
+  // const profile = await getTechnicianProfile();
 
   if (!profile.data) return null;
 
-  return <TechnicianProfileForm profile={profile.data} />;
+  return <ProfileUpdateForm profile={profile.data.data} />;
 };
 
 export default TechnicianProfilePage;

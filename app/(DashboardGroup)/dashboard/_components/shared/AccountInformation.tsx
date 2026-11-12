@@ -1,12 +1,13 @@
-import type { UserUpdateProfile } from "@/types/user";
+import type { User } from "@/types/user";
 
 interface AccountInformationProps {
-  profile: UserUpdateProfile;
+  profile: User;
 }
 
 export default function AccountInformation({
   profile,
 }: AccountInformationProps) {
+  // console.log(profile);
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
       <h2 className="font-bold text-slate-900">
@@ -30,7 +31,7 @@ export default function AccountInformation({
           </p>
 
           <p className="mt-1 text-sm font-medium text-slate-700">
-            {profile.role || "TECHNICIAN"}
+            {profile.role }
           </p>
         </div>
       </div>

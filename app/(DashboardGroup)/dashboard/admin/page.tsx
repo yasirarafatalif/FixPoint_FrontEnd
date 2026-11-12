@@ -4,6 +4,10 @@ import {
   getAdminUsers,
   getAdminBookings,
 } from "@/service/adminDashboardService";
+export const metadata = {
+  title: "FixItNow | Admin Dashboard",
+  description:"Manage users, monitor bookings, and track your service marketplace.",
+};
 
 export const dynamic = "force-dynamic";
 

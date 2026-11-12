@@ -3,11 +3,15 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import type { UserUpdateProfile } from "@/types/user";
+import type { UserUpdateProfile , User } from "@/types/user";
 import ProfileAvatar from "./ProfileAvatar";
 
+// interface ProfileHeaderProps {
+//   profile: UserUpdateProfile;
+//   previewImage: string;
+// }
 interface ProfileHeaderProps {
-  profile: UserUpdateProfile;
+  profile: User;
   previewImage: string;
 }
 
@@ -24,6 +28,7 @@ export default function ProfileHeader({
           <div className="flex items-end gap-4">
             <ProfileAvatar
               image={previewImage}
+              profileImage={profile.profileImage}
               name={profile.name || ""}
             />
 
@@ -40,7 +45,7 @@ export default function ProfileHeader({
 
           <span className="inline-flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700">
             <span className="h-2 w-2 rounded-full bg-emerald-500" />
-            {profile.status || "ACTIVE"}
+            {profile.status }
           </span>
         </div>
 
@@ -50,7 +55,7 @@ export default function ProfileHeader({
               size={16}
               className="text-violet-600"
             />
-            Technician
+            {profile.role}
           </span>
 
           <span className="inline-flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
@@ -58,7 +63,7 @@ export default function ProfileHeader({
               size={16}
               className="text-emerald-600"
             />
-            Verified account status: {profile.status || "ACTIVE"}
+            Verified account status: {profile.status}
           </span>
         </div>
       </div>
