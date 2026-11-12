@@ -9,7 +9,6 @@ import {
   CalendarClock,
   CreditCard,
   Star,
-  Wrench,
   BriefcaseBusiness,
 } from "lucide-react";
 
@@ -54,7 +53,6 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
         icon: Star,
       },
     ],
-
     secondary: [
       {
         label: "My Profile",
@@ -63,6 +61,7 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
       },
     ],
   },
+
   TECHNICIAN: {
     title: "Technician workspace",
     home: "/dashboard/technician",
@@ -87,25 +86,42 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
         href: "/dashboard/technician/availability",
         icon: CalendarClock,
       },
-      // { label: "My profile", href: "/dashboard/technician/profile", icon: UserRound }
     ],
     secondary: [
       {
-        label: "My profile",
+        label: "My Profile",
         href: "/dashboard/technician/profile",
         icon: UserRound,
       },
     ],
   },
+
   ADMIN: {
     title: "Administration",
     home: "/dashboard/admin",
     main: [
-      { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
-      { label: "Users", href: "/dashboard/admin/users", icon: Users },
-      { label: "Categories", href: "/dashboard/admin/categories", icon: Tags },
+      {
+        label: "Overview",
+        href: "/dashboard/admin",
+        icon: LayoutDashboard,
+      },
+      {
+        label: "Users",
+        href: "/dashboard/admin/users",
+        icon: Users,
+      },
+      {
+        label: "Categories",
+        href: "/dashboard/admin/categories",
+        icon: Tags,
+      },
     ],
     secondary: [
+      {
+        label: "My Profile",
+        href: "/dashboard/admin/profile",
+        icon: UserRound,
+      },
       {
         label: "Platform settings",
         href: "/dashboard/admin/settings",

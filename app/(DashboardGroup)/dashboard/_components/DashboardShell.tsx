@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -10,13 +11,12 @@ import {
   ChevronsRight,
   LogOut,
   Menu,
-  PanelLeft,
-  PanelLeftClose,
   Search,
   Wrench,
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+
 import { logout } from "@/service/logout";
 import { dashboardMenus, type DashboardRole } from "./dashboardMenu";
 
@@ -44,78 +44,129 @@ export default function DashboardShell({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
+
   const menu = dashboardMenus[user.role];
+
+  // Separate profile from other secondary menu items
+  const profileItems = menu.secondary.filter((item) =>
+    item.href.endsWith("/profile")
+  );
+
+  const accountItems = menu.secondary.filter(
+    (item) => !item.href.endsWith("/profile")
+  );
 
   const isActive = (href: string) =>
     pathname === href ||
     (href !== menu.home && pathname.startsWith(`${href}/`));
 
   const handleLogout = async () => {
-    await logout();
-    toast.success("You have been logged out.");
-    router.replace("/auth/login");
-    router.refresh();
+    try {
+      await logout();
+      toast.success("You have been logged out.");
+      router.replace("/auth/login");
+      router.refresh();
+    } catch {
+      toast.error("Failed to log out. Please try again.");
+    }
   };
 
+  // Main navigation
   const navigation = (
-    <nav className="flex flex-1 flex-col overflow-y-auto px-3 py-5">
+    <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-5">
       <p
-        className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 ${collapsed ? "lg:hidden" : ""}`}
+        className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 ${
+          collapsed ? "lg:hidden" : ""
+        }`}
       >
         Workspace
       </p>
+
       <div className="space-y-1">
         {menu.main.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
+
           return (
             <Link
-              key={item.label}
+              key={item.href}
               href={item.href}
               onClick={() => setMobileOpen(false)}
               title={collapsed ? item.label : undefined}
-              className={`flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition ${collapsed ? "lg:justify-center" : "gap-3"} ${active ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20" : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"}`}
+              className={`flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition ${
+                collapsed ? "lg:justify-center" : "gap-3"
+              } ${
+                active
+                  ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+              }`}
             >
               <Icon size={19} className="shrink-0" />
-              <span className={collapsed ? "lg:hidden" : ""}>{item.label}</span>
+
+              <span className={collapsed ? "lg:hidden" : ""}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
       </div>
-      <div className="mt-8 border-t border-slate-100 pt-5">
-        <p
-          className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 ${collapsed ? "lg:hidden" : ""}`}
-        >
-          Account
-        </p>
-        <div className="space-y-1">
-          {menu.secondary.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                title={collapsed ? item.label : undefined}
-                className={`flex items-center rounded-xl px-3 py-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 ${collapsed ? "lg:justify-center" : "gap-3"}`}
-              >
-                <Icon size={19} className="shrink-0 text-slate-400" />
-                <span className={collapsed ? "lg:hidden" : ""}>
-                  {item.label}
-                </span>
-              </Link>
-            );
-          })}
+
+      {/* Other account navigation items */}
+      {accountItems.length > 0 && (
+        <div className="mt-8 border-t border-slate-100 pt-5">
+          <p
+            className={`mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 ${
+              collapsed ? "lg:hidden" : ""
+            }`}
+          >
+            Account
+          </p>
+
+          <div className="space-y-1">
+            {accountItems.map((item) => {
+              const Icon = item.icon;
+              const active = isActive(item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  title={collapsed ? item.label : undefined}
+                  className={`flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition ${
+                    collapsed ? "lg:justify-center" : "gap-3"
+                  } ${
+                    active
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                  }`}
+                >
+                  <Icon
+                    size={19}
+                    className={`shrink-0 ${
+                      active ? "text-white" : "text-slate-400"
+                    }`}
+                  />
+
+                  <span className={collapsed ? "lg:hidden" : ""}>
+                    {item.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 
   return (
     <div className="min-h-screen bg-[#f6f8fc] text-slate-900">
+      {/* Mobile Overlay */}
       {mobileOpen && (
         <button
           aria-label="Close navigation"
@@ -123,25 +174,33 @@ export default function DashboardShell({
           className="fixed inset-0 z-40 bg-slate-950/35 lg:hidden"
         />
       )}
+
+      {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r border-slate-200 bg-white transition-transform duration-300 ${mobileOpen ? "translate-x-0" : "-translate-x-full"} ${collapsed ? "lg:w-20" : "lg:w-72"} lg:translate-x-0`}
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-72 flex-col border-r border-slate-200 bg-white transition-all duration-300 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        } ${collapsed ? "lg:w-20" : "lg:w-72"} lg:translate-x-0`}
       >
+        {/* Logo */}
         <div
-          className={`flex h-[73px] items-center border-b border-slate-100 px-5 ${collapsed ? "lg:justify-center" : "justify-between"}`}
+          className={`flex h-[73px] shrink-0 items-center border-b border-slate-100 px-5 ${
+            collapsed ? "lg:justify-center" : "justify-between"
+          }`}
         >
-          <Link
-            href="/"
-            className="flex items-center gap-3 overflow-hidden"
-          >
+          <Link href="/" className="flex items-center gap-3 overflow-hidden">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white">
               <Wrench size={20} />
             </span>
+
             <span
-              className={`whitespace-nowrap text-lg font-extrabold tracking-tight ${collapsed ? "lg:hidden" : ""}`}
+              className={`whitespace-nowrap text-lg font-extrabold tracking-tight ${
+                collapsed ? "lg:hidden" : ""
+              }`}
             >
               FixIt<span className="text-blue-600">Now</span>
             </span>
           </Link>
+
           <button
             aria-label="Close navigation"
             onClick={() => setMobileOpen(false)}
@@ -150,25 +209,72 @@ export default function DashboardShell({
             <X size={20} />
           </button>
         </div>
+
+        {/* Main Navigation */}
         {navigation}
-        <div
-          className={`border-t border-slate-100 p-3 ${collapsed ? "lg:flex lg:justify-center" : ""}`}
-        >
+
+        {/* Bottom Section */}
+        <div className="mt-auto shrink-0 border-t border-slate-100 bg-white p-3">
+          {/* Profile - Always at Bottom */}
+          {profileItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                title={collapsed ? item.label : undefined}
+                className={`mb-2 flex items-center rounded-xl px-3 py-3 text-sm font-semibold transition ${
+                  collapsed ? "lg:justify-center" : "gap-3"
+                } ${
+                  active
+                    ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+                }`}
+              >
+                <Icon
+                  size={19}
+                  className={`shrink-0 ${
+                    active ? "text-white" : "text-slate-400"
+                  }`}
+                />
+
+                <span className={collapsed ? "lg:hidden" : ""}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+
+          {/* Logout */}
           <button
             onClick={handleLogout}
             title="Log out"
-            className={`flex w-full items-center rounded-xl px-3 py-3 text-sm font-semibold text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 ${collapsed ? "lg:w-auto lg:justify-center" : "gap-3"}`}
+            className={`flex w-full items-center rounded-xl px-3 py-3 text-sm font-semibold text-slate-500 transition hover:bg-rose-50 hover:text-rose-600 ${
+              collapsed ? "lg:justify-center" : "gap-3"
+            }`}
           >
-            <LogOut size={19} />
-            <span className={collapsed ? "lg:hidden" : ""}>Log out</span>
+            <LogOut size={19} className="shrink-0" />
+
+            <span className={collapsed ? "lg:hidden" : ""}>
+              Log out
+            </span>
           </button>
         </div>
       </aside>
+
+      {/* Main Content */}
       <div
-        className={`min-h-screen transition-[padding] duration-300 ${collapsed ? "lg:pl-20" : "lg:pl-72"}`}
+        className={`min-h-screen transition-[padding] duration-300 ${
+          collapsed ? "lg:pl-20" : "lg:pl-72"
+        }`}
       >
+        {/* Header */}
         <header className="sticky top-0 z-30 flex h-[73px] items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur-xl sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
+            {/* Mobile Menu */}
             <button
               aria-label="Open navigation"
               onClick={() => setMobileOpen(true)}
@@ -176,6 +282,8 @@ export default function DashboardShell({
             >
               <Menu size={20} />
             </button>
+
+            {/* Desktop Collapse */}
             <button
               aria-label="Collapse sidebar"
               onClick={() => setCollapsed(!collapsed)}
@@ -187,15 +295,19 @@ export default function DashboardShell({
                 <ChevronsLeft size={19} />
               )}
             </button>
+
             <div>
               <p className="hidden text-[10px] font-bold uppercase tracking-[0.16em] text-blue-600 sm:block">
                 {menu.title}
               </p>
+
               <h1 className="text-base font-bold tracking-tight sm:text-lg">
                 Dashboard
               </h1>
             </div>
           </div>
+
+          {/* Header Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <button
               aria-label="Search"
@@ -203,6 +315,7 @@ export default function DashboardShell({
             >
               <Search size={20} />
             </button>
+
             <button
               aria-label="Notifications"
               className="relative rounded-xl p-2.5 text-slate-500 hover:bg-slate-100"
@@ -210,6 +323,8 @@ export default function DashboardShell({
               <Bell size={20} />
               <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-blue-600 ring-2 ring-white" />
             </button>
+
+            {/* User Profile Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
@@ -218,24 +333,37 @@ export default function DashboardShell({
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-xs font-bold text-white">
                   {initials(user.name)}
                 </span>
+
                 <span className="hidden max-w-28 sm:block">
                   <span className="block truncate text-sm font-bold">
                     {user.name || "Account"}
                   </span>
+
                   <span className="block text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                     {user.role}
                   </span>
                 </span>
+
                 <ChevronDown
                   size={16}
                   className="hidden text-slate-400 sm:block"
                 />
               </button>
+
               {profileOpen && (
                 <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
                   <p className="px-3 py-2 text-xs text-slate-500">
                     {user.email || "Signed in"}
                   </p>
+
+                  <Link
+                    href={profileItems[0]?.href || "#"}
+                    onClick={() => setProfileOpen(false)}
+                    className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-100"
+                  >
+                    My Profile
+                  </Link>
+
                   <button
                     onClick={handleLogout}
                     className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-rose-600 hover:bg-rose-50"
@@ -248,6 +376,8 @@ export default function DashboardShell({
             </div>
           </div>
         </header>
+
+        {/* Page Content */}
         <main className="mx-auto w-full max-w-[1600px] p-4 sm:p-6 lg:p-8">
           {children}
         </main>
