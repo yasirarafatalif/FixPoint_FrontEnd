@@ -1,13 +1,23 @@
-"use client";
-
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 
 import { getCustomerBookingById } from "@/service/bookingService";
 
 import BookingDetailsContent from "./_components/BookingDetailsContent";
-import BookingDetailsSkeleton from "./_components/BookingDetailsSkeleton";
+import BookingDetailsError from "./_components/BookingDetailsError";
+
 import type { BookingDetailsData } from "./_components/bookingDetails.types";
+
+export const metadata = {
+  title: "Booking Details | FixItNow",
+  description: "View your service booking details and payment information.",
+};
+
+export const dynamic = "force-dynamic";
+
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
 
 type ApiBooking = {
   id?: string;
@@ -43,6 +53,7 @@ type ApiBooking = {
         status?: string;
       }[]
     | null;
+
   paymentStatus?: string | null;
 
   location?: string | null;
@@ -54,7 +65,9 @@ function formatDate(value?: string | Date): string {
 
   const date = new Date(value);
 
-  if (Number.isNaN(date.getTime())) return "Not available";
+  if (Number.isNaN(date.getTime())) {
+    return "Not available";
+  }
 
   return date.toLocaleDateString("en-US", {
     year: "numeric",
@@ -69,7 +82,9 @@ function formatTime(value?: string | Date): string {
 
   const date = new Date(value);
 
-  if (Number.isNaN(date.getTime())) return "Time not available";
+  if (Number.isNaN(date.getTime())) {
+    return "Time not available";
+  }
 
   return date.toLocaleTimeString("en-US", {
     hour: "2-digit",
@@ -80,6 +95,7 @@ function formatTime(value?: string | Date): string {
 
 function toAmount(value?: number | string): number {
   const amount = Number(value ?? 0);
+
   return Number.isFinite(amount) ? amount : 0;
 }
 
@@ -101,6 +117,10 @@ function mapBooking(raw: ApiBooking): BookingDetailsData {
     raw.payments?.[0]?.status ??
     "UNKNOWN";
 
+  const serviceCharge = toAmount(
+    service?.price ?? raw.totalPrice
+  );
+
   return {
     serviceName: service?.title ?? service?.name ?? "Service",
 
@@ -118,23 +138,28 @@ function mapBooking(raw: ApiBooking): BookingDetailsData {
 
     customerNote: raw.customerNote ?? "",
 
-    location: raw.location ?? raw.address ?? "Location not available",
+    location:
+      raw.location ?? raw.address ?? "Location not available",
 
     technician: {
       name: raw.technician?.name ?? "Not assigned",
       profession: raw.technician?.profession ?? "Technician",
+
       experience: raw.technician?.experience
         ? `${raw.technician.experience} experience`
         : "Not available",
+
       rating: raw.technician?.rating ?? "—",
     },
 
     pricing: {
-      serviceCharge: toAmount(service?.price ?? raw.totalPrice),
+      serviceCharge,
+
       additionalCharge: Math.max(
         0,
-        total - toAmount(service?.price ?? raw.totalPrice),
+        total - serviceCharge
       ),
+
       total,
     },
 
@@ -142,72 +167,42 @@ function mapBooking(raw: ApiBooking): BookingDetailsData {
   };
 }
 
-export default function BookingDetailsPage() {
-  const params = useParams<{ id: string }>();
-  const bookingId = params.id;
+export default async function BookingDetailsPage({
+  params,
+}: Props) {
+  const { id: bookingId } = await params;
+  let result: Awaited<ReturnType<typeof getCustomerBookingById>> | undefined;
+  let requestFailed = false;
 
-  const [booking, setBooking] = useState<BookingDetailsData | null>(null);
-
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const loadBooking = useCallback(async () => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const result = await getCustomerBookingById(bookingId);
-
-      if (!result.success || !result.data) {
-        setBooking(null);
-        setError(result.message || "Unable to load booking details.");
-        return;
-      }
-
-      setBooking(mapBooking(result.data as ApiBooking));
-    } catch (err) {
-      console.error("Booking details page error:", err);
-
-      setBooking(null);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }, [bookingId]);
-
-  useEffect(() => {
-    if (bookingId) {
-      void loadBooking();
-    }
-  }, [bookingId, loadBooking]);
-
-  if (loading) {
-    return <BookingDetailsSkeleton />;
+  try {
+    result = await getCustomerBookingById(bookingId);
+  } catch (error) {
+    console.error("Booking details page error:", error);
+    requestFailed = true;
   }
 
-  if (error || !booking) {
+  if (requestFailed) {
     return (
-      <main className="min-h-screen bg-slate-50 px-4 py-16">
-        <div className="mx-auto max-w-lg rounded-2xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-200">
-          <h1 className="text-xl font-bold text-gray-900">
-            Unable to Load Booking
-          </h1>
-
-          <p className="mt-3 text-sm text-gray-500">
-            {error || "Booking not found."}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => void loadBooking()}
-            className="mt-6 rounded-xl bg-blue-700 px-5 py-3 font-semibold text-white transition hover:bg-blue-800"
-          >
-            Try Again
-          </button>
-        </div>
-      </main>
+      <BookingDetailsError
+        message="Something went wrong. Please try again."
+      />
     );
   }
 
-  return <BookingDetailsContent booking={booking} bookingId={bookingId} />;
+  if (!result?.success || !result.data) {
+    return (
+      <BookingDetailsError
+        message={result?.message || "Unable to load booking details."}
+      />
+    );
+  }
+
+  const booking = mapBooking(result.data as ApiBooking);
+
+  return (
+    <BookingDetailsContent
+      booking={booking}
+      bookingId={bookingId}
+    />
+  );
 }

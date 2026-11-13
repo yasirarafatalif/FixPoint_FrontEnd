@@ -1,44 +1,60 @@
-"use client";
-import { dashboardMenus, fallbackDashboardRole } from './../../../app/(DashboardGroup)/dashboard/_components/dashboardMenu';
 
-import { useEffect, useState } from "react";
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
+
 import { getMe } from "@/service/getme";
 import { logout } from "@/service/logout";
 
+import {
+  dashboardMenus,
+  fallbackDashboardRole,
+  type DashboardRole,
+} from "@/app/(DashboardGroup)/dashboard/_components/dashboardMenu";
 
 export type NavbarUser = {
   name?: string;
   email?: string;
   role?: string;
 };
-import { DashboardRole } from "@/app/(DashboardGroup)/dashboard/_components/dashboardMenu";
 
 export function useNavbarUser() {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [user, setUser] = useState<NavbarUser | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const result = await getMe();
+  const fetchUser = useCallback(async () => {
+    try {
+      const result = await getMe();
 
-        if (result.success) {
-          const response = result.data;
-          setUser(response?.data ?? response ?? null);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
+      if (result.success) {
+        const response = result.data;
+        setUser(response?.data ?? response ?? null);
+      } else {
         setUser(null);
-      } finally {
-        setLoading(false);
       }
+    } catch (error) {
+      console.error("Failed to fetch user:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
     }
-
-    fetchUser();
   }, []);
+
+  useEffect(() => {
+    // Dashboard থেকে public page-এ ফিরলে user refresh হবে
+    if (pathname.startsWith("/dashboard")) return;
+
+    const timeoutId = window.setTimeout(() => {
+      void fetchUser();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [pathname, fetchUser]);
 
   const roleValue = user?.role?.toUpperCase();
 
@@ -53,8 +69,11 @@ export function useNavbarUser() {
   const handleLogout = async () => {
     try {
       await logout();
+
       setUser(null);
       toast.success("User logged out successfully!");
+
+      router.refresh();
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Failed to log out.");
@@ -69,5 +88,6 @@ export function useNavbarUser() {
     dashboardHref,
     profileHref,
     handleLogout,
+    refreshUser: fetchUser,
   };
 }

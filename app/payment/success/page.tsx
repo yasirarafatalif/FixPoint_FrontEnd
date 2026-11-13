@@ -10,6 +10,10 @@ import {
   Sparkles,
 } from "lucide-react";
 
+export const metadata={
+  title:"Payments Success Page | FixItNow"
+}
+
 export default async function PaymentSuccessPage({
   searchParams,
 }: {

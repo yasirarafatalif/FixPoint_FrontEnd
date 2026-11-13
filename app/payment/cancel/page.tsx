@@ -9,6 +9,9 @@ import {
   ShieldCheck,
   Headphones,
 } from "lucide-react";
+export const metadata={
+  title:"Payments Failed Page | FixItNow"
+}
 
 export default async function PaymentCancelPage({
   searchParams,

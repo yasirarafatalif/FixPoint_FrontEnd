@@ -80,7 +80,7 @@ type RegisterPayload = {
 };
 
 export const registerAction = async (payload: RegisterPayload) => {
-  console.log(payload)
+  // console.log(payload)
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
