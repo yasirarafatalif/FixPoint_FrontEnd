@@ -1,3 +1,4 @@
+
 import {
   CalendarCheck,
   CheckCircle2,
@@ -15,11 +16,11 @@ export default function BookingStats({
   bookings,
 }: BookingStatsProps) {
   const pending = bookings.filter(
-    (booking) => booking.status === "PENDING"
+    (booking) => booking.status === "REQUESTED"
   ).length;
 
   const confirmed = bookings.filter(
-    (booking) => booking.status === "CONFIRMED"
+    (booking) => booking.status === "ACCEPTED"
   ).length;
 
   const completed = bookings.filter(
@@ -44,6 +45,12 @@ export default function BookingStats({
       style: "bg-amber-50 text-amber-600",
     },
     {
+      title: "Confirmed",
+      value: confirmed,
+      icon: CheckCircle2,
+      style: "bg-indigo-50 text-indigo-600",
+    },
+    {
       title: "Completed",
       value: completed,
       icon: CheckCircle2,
@@ -58,7 +65,7 @@ export default function BookingStats({
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
       {stats.map((stat) => {
         const Icon = stat.icon;
 

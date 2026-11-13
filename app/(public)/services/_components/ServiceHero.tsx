@@ -10,7 +10,10 @@ import { Service } from "@/types/service";
 
 
 interface Props {
-  service: Service;
+  service: Pick<
+    Service,
+    "id" | "title" | "description" | "isActive"
+  >;
 }
 
 export default function ServiceHero({
