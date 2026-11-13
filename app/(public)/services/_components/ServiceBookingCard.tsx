@@ -7,8 +7,11 @@ import {
   Clock3,
   LockKeyhole,
 } from "lucide-react";
+import { Service } from "@/types/servicesTypes";
 
-import { Service } from "./ServiceCard";
+// import ServiceCard from "./ServiceCard";
+
+// type Service = Parameters<typeof ServiceCard>[0]["service"];
 
     
 
@@ -56,8 +59,6 @@ export default function ServiceBookingCard({
       "Booking Data:",
       bookingData
     );
-
-    // এখানে পরে POST /api/bookings করবে
   };
 
   return (

@@ -1,10 +1,11 @@
+import { Service } from "@/types/servicesTypes";
 import {
   Clock3,
   ShieldCheck,
   Wrench,
 } from "lucide-react";
 
-import { Service } from "./ServiceCard";
+// import { Service } from "./ServiceCard";
 
 
 interface Props {

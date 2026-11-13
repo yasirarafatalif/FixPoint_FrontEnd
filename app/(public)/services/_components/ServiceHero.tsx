@@ -4,8 +4,9 @@ import {
   CheckCircle2,
   Wrench,
 } from "lucide-react";
+import { Service } from "@/types/service";
 
-import { Service } from "./ServiceCard";
+// import { Service } from "./ServiceCard";
 
 
 interface Props {
