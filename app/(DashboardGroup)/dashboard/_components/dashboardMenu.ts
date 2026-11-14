@@ -122,11 +122,7 @@ export const dashboardMenus: Record<DashboardRole, DashboardMenu> = {
         href: "/dashboard/admin/profile",
         icon: UserRound,
       },
-      {
-        label: "Platform settings",
-        href: "/dashboard/admin/settings",
-        icon: Settings,
-      },
+      
     ],
   },
 };

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { X, Plus } from "lucide-react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { createAdminCategory } from "@/service/admin.services";
 
-import { createAdminCategory } from "@/service/adminCategoryService";
 
 interface CategoryFormProps {
   onClose: () => void;

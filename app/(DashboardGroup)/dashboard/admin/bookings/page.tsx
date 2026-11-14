@@ -1,4 +1,5 @@
-import { getAllAdminBookings } from "@/service/adminBookingService";
+
+import { getAllAdminBookings } from "@/service/admin.services";
 import BookingsClient from "./BookingsClient";
 
 export const metadata = {

@@ -1,4 +1,4 @@
-import { getTechnicianProfile } from "@/service/technicianService";
+
 import ProfileUpdateForm from "../../_components/shared/ProfileUpdateFrom";
 import { getMe } from "@/service/getme";
 
@@ -9,8 +9,6 @@ export const metadata = {
 
 const TechnicianProfilePage = async () => {
   const profile = await getMe();
-  // const profile = await getTechnicianProfile();
-
   if (!profile.data) return null;
 
   return <ProfileUpdateForm profile={profile.data.data} />;

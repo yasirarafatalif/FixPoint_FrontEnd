@@ -158,10 +158,6 @@ export const getCustomerBookings = async () => {
 };
 
 
-
-
-
-
 export const getCustomerBookingById = async (bookingId: string) => {
   try {
     if (!bookingId?.trim()) {

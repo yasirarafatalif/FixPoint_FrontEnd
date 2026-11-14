@@ -1,7 +1,8 @@
-import { getAllServices } from "@/service/getAllServices";
-import { getCategories } from "@/service/getCategories";
+
 import type { Service as ServicesClientService } from "@/types/servicesTypes";
 import ServicesClient from "./_components/ServicesClient";
+import { getAllServices } from "@/service/service.services";
+import { getCategories } from "@/service/categories";
 
 export const metadata = { 
   title: "FixtItNow | Services",

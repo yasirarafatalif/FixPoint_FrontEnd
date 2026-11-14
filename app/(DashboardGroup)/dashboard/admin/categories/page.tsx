@@ -1,4 +1,5 @@
-import { getAllAdminCategories } from "@/service/adminCategoryService";
+
+import { getAllAdminCategories } from "@/service/admin.services";
 import CategoriesClient from "./CategoriesClient";
 
 export const metadata = {

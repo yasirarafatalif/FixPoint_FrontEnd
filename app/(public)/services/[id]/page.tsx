@@ -7,8 +7,8 @@ import ServiceHero from "../_components/ServiceHero";
 import ServiceInfo from "../_components/ServiceInfo";
 import TechnicianCard from "../_components/TechnicianCard";
 import ServiceFeatures from "../_components/ServiceFeatures";
-import ServiceBookingCard from "../_components/ServiceBookingCard";
-import { getSingleService } from "@/service/getAllServices";
+import { getSingleServicePublicUser } from "@/service/service.services";
+
 
 export const metadata = {
   title: "FixtItNow | Service Details",
@@ -46,7 +46,7 @@ export default async function ServiceDetailsPage({
   const { id } = await params;
 
   // Fetch single service data
-  const res = await getSingleService(id);
+  const res = await getSingleServicePublicUser(id);
   // const res = await getSingleService(id);
   const serviceData: Service | null = res?.data?.data || res?.data || null;
 

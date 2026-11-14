@@ -1,5 +1,4 @@
 
-import { getAllServices } from "@/service/getAllServices";
 import { HomeCategoryItem, HomeService } from "./_components/home.types";
 import HomeHero from "./_components/HomeHero";
 import HomeCategories from "./_components/HomeCategories";
@@ -8,6 +7,7 @@ import HowItWorks from "./_components/HowItWorks";
 import WhyChooseUs from "./_components/WhyChooseUs";
 import Footer from "./_components/HomeFooter";
 import { getCategories } from "@/service/categories";
+import { getAllServices } from "@/service/service.services";
 export const metadata={
   title:"FixtItNow | Home Page"
 }
