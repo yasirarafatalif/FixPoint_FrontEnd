@@ -16,8 +16,8 @@
 </p>
 
 <p align="center">
-  <a href="YOUR_LIVE_FRONTEND_URL">🌐 Live Demo</a> •
-  <a href="YOUR_BACKEND_URL">⚙️ Backend API</a> •
+  <a href="https://fix-point-front-end.vercel.app">🌐 Live Demo</a> •
+  <a href="https://fix-point-backend-wcb9.vercel.app">⚙️ Backend API</a> •
   <a href="#-features">✨ Features</a>
 </p>
 
@@ -169,7 +169,7 @@ Follow these steps to run the project locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone YOUR_GITHUB_REPOSITORY_URL
+git clone https://github.com/yasirarafatalif/FixPoint_FrontEnd.git
 ```
 
 ### 2. Navigate to the Project Directory
@@ -218,8 +218,8 @@ http://localhost:3000
 
 The frontend application is deployed using **Vercel**.
 
-- **Frontend:** YOUR_LIVE_FRONTEND_URL
-- **Backend:** YOUR_BACKEND_URL
+- **Frontend:** https://fix-point-front-end.vercel.app
+- **Backend:** https://fix-point-backend-wcb9.vercel.app
 
 ## 📸 Screenshots
 
