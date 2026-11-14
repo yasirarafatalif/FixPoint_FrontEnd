@@ -6,10 +6,10 @@
 |---|---|---|
 | POST /api/auth/register | authActions.ts → registerAction | /auth/register |
 | POST /api/auth/login | authActions.ts → loginAction | /auth/login |
-| GET /api/services | service/getServices.ts → getServices | /, /services |
+| GET /api/services | service/getServices.ts → getServices | /api /services |
 | GET /api/technicians | service/getTechnicians.ts → getTechnicians | /services |
 | GET /api/technicians/:id | service/getTechnician.ts → getTechnician | /technicians/[id] |
-| GET /api/categories | service/getCategories.ts → getCategories | /, /services |
+| GET /api/categories | service/getCategories.ts → getCategories | /api /services |
 | GET /api/bookings | service/getBookings.ts → getMyBookings | /dashboard/customer |
 | POST /api/bookings | bookingActions.ts → createBookingAction | /technicians/[id] (BookingForm) |
 | PATCH /api/bookings/:id/cancel | bookingActions.ts → cancelBookingAction | /dashboard/customer/bookings |
