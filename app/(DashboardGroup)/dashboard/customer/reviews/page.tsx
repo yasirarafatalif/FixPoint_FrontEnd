@@ -10,6 +10,7 @@ export const metadata = {
   title: "My Reviews",
   description: "View and manage your submitted reviews.",
 };  
+export const dynamic = "force-dynamic";
 
 export default async function CustomerReviewsPage() {
   const [bookingResult, reviewResult] = await Promise.all([

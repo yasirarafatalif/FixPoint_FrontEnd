@@ -10,6 +10,7 @@ export const metadata = {
   title: "FixItNow | Technician Services",
   description: "Manage your services as a technician.",
 };
+export const dynamic = "force-dynamic";
 
 const TechnicianServicesPage = async () => {
   const [categories, services] = await Promise.all([

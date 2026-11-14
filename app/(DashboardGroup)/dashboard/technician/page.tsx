@@ -12,6 +12,7 @@ export const metadata = {
   title: "FixitNow | Technician Dashboard",
   description: "Technician dashboard for FixPoint",
 };
+export const dynamic = "force-dynamic";
 
 export default async function TechnicianDashboardPage() {
 

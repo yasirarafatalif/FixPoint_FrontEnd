@@ -6,6 +6,7 @@ export const metadata = {
   title: "FixItNow | Categories Management Page",
   description: "Manage and oversee all categories in the FixItNow platform.",
 };
+export const dynamic = "force-dynamic";
 
 export default async function CategoriesPage() {
   const result = await getAllAdminCategories();
