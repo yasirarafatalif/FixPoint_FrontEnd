@@ -32,7 +32,7 @@ interface Props {
 }
 
 export default function ProfileUpdateForm({ profile }: Props) {
-  // console.log("formprofile update form page",profile);
+ 
   const router = useRouter();
 
   const [editing, setEditing] = useState(false);

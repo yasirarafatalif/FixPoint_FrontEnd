@@ -239,7 +239,7 @@ export const getTechnicianBookings = async () => {
         data: [],
       };
     }
-    console.log(result.data);
+    
 
     return {
       success: true,
@@ -452,7 +452,7 @@ export async function TechnicianProfileSet(payload: TechnicianProfile) {
     });
 
     const result = await response.json();
-    console.log(result);
+
 
     if (!response.ok) {
       return {

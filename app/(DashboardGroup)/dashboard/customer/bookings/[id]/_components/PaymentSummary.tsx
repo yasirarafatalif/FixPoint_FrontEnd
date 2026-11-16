@@ -28,7 +28,7 @@ export default function PaymentSummary({
   booking: BookingDetailsData;
   bookingId: string;
 }) {
-    console.log(booking)
+
   const status = (booking.status || "").toUpperCase();
   const paymentStatus = (booking.paymentStatus || "UNKNOWN").toUpperCase();
 

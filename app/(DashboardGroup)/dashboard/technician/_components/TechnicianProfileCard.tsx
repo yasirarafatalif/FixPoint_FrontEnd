@@ -17,7 +17,7 @@ export default function TechnicianProfileCard({
   profile,
   user,
 }: Props) {
-  console.log(user)
+
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
 

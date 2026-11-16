@@ -16,6 +16,8 @@ const PUBLIC_ROUTES = [
   "/technicians",
   "/payment/success",
   "/payment/cancel",
+  "/categories",
+  "/contact"
 ];
 
 export async function proxy(request: NextRequest) {

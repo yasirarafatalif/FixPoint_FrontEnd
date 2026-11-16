@@ -35,7 +35,7 @@ export const getSingleServicePublicUser = async (id: string) => {
 
     const service = await response.json();
 
-    console.log("Service response:", service);
+  
 
     return {
       success: true,
@@ -82,7 +82,6 @@ export const getSingleService = async (serviceId: string) => {
       },
     );
 
-    console.log("Response status:", res);
 
     if (!res.ok) {
       return {
@@ -94,7 +93,7 @@ export const getSingleService = async (serviceId: string) => {
 
     const service = await res.json();
 
-    console.log("Service response:", service);
+  
 
     return {
       success: true,

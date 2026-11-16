@@ -20,10 +20,7 @@ export default async function TechnicianDashboardPage() {
   const userProfile = await technicianGetProfile();
   const availabilityResult = await getTechnicianAvailability();
   const bookingsResult = await getTechnicianBookings();
-  console.log(profileResult)
-  console.log(userProfile)
-  console.log(availabilityResult)
-  console.log(bookingsResult)
+
 
   if (
     !profileResult.success ||

@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function MyPaymentsPage() {
   const result = await getMyPayments();
-  console.log("getMyPayments result:", result);
+
 
   const payments: Payment[] = result.success
     ? result.data

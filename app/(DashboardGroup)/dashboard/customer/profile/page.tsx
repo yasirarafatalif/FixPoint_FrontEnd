@@ -10,7 +10,6 @@ export const metadata = {
 
 const CustomerProfilePage = async () => {
   const profile = await getMe();
-  // console.log(profile.data.data)
 
   if (!profile.data) return null;
 

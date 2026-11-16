@@ -16,7 +16,7 @@ interface Props {
 }
 
 export default function TechnicianBookingsClient({ bookings }: Props) {
-  console.log(bookings);
+
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<"ALL" | TechnicianBookingStatus>("ALL");
 

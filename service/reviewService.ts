@@ -85,7 +85,7 @@ export async function getMyReviews() {
         data: [],
       };
     }
-    console.log(result)
+    
 
     return {
       success: true,

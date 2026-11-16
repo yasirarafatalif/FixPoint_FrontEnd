@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default function RecentBookings({ bookings }: Props) {
-  console.log(bookings)
+
   const recentBookings = bookings.slice(0, 3);
   return (
     <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">

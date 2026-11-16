@@ -19,7 +19,7 @@ export const loginAction = async (
   prevState: LoginState,
   formData: FormData,
 ) => {
-  // console.log(formData);
+  
   const email = formData.get("email");
   const password = formData.get("password");
 
@@ -80,7 +80,6 @@ type RegisterPayload = {
 };
 
 export const registerAction = async (payload: RegisterPayload) => {
-  // console.log(payload)
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,

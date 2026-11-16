@@ -3,7 +3,6 @@ import { getMe } from "@/service/getme";
 
 export default async function DashboardPage() {
   const response = await getMe();
-  // console.log(response)
   const payload = response.success ? (response.data as { role?: string; data?: { role?: string } }) : null;
   const role = (payload?.data?.role ?? payload?.role)?.toUpperCase();
 

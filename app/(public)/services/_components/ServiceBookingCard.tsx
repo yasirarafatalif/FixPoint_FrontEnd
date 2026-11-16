@@ -55,10 +55,7 @@ export default function ServiceBookingCard({
       customerNote: "",
     };
 
-    console.log(
-      "Booking Data:",
-      bookingData
-    );
+  
   };
 
   return (

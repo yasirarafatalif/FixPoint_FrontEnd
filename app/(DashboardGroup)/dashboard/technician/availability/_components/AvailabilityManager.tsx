@@ -57,7 +57,7 @@ export default function AvailabilityForm() {
     setSaving(true);
 
     try {
-        console.log(formData)
+     
       const result = await updateTechnicianAvailability(formData);
 
       if (!result.success) {

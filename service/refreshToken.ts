@@ -19,12 +19,12 @@ export const getNewAccessToken = async () => {
     },
   );
 
-  //   console.log("Refresh response:", res.status, res.statusText);
+
 
   if (!res.ok) {
     const errorText = await res.text();
 
-    console.log("Refresh error:", errorText);
+    
 
     return {
       success: false,

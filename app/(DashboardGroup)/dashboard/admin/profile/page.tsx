@@ -10,7 +10,7 @@ export const metadata = {
 
 const AdminProfilePage = async () => {
   const profile = await getMe();
-  // console.log(profile.data.data)
+ 
 
   if (!profile.data) return null;
 

@@ -14,7 +14,7 @@ export default async function AdminUsersPage() {
 
   const result = response;
 
-  // console.log(result.data);
+  
 
   if (!result.success) {
     return (

@@ -90,7 +90,7 @@ export const adminUpdateUserStatus = async (
       cache: "no-store",
     },
   );
-//   console.log(response)
+
 
   const result = await response.json();
 

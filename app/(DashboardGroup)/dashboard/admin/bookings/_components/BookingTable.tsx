@@ -9,7 +9,7 @@ interface BookingTableProps {
 }
 
 export default function BookingTable({ bookings }: BookingTableProps) {
-  console.log(bookings)
+
   if (bookings.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center px-6 py-16 text-center">

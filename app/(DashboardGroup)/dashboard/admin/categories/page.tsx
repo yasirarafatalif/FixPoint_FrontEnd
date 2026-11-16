@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function CategoriesPage() {
   const result = await getAllAdminCategories();
-  // console.log(result)
+  
 
   if (!result.success) {
     return (
