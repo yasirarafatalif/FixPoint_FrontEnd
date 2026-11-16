@@ -101,6 +101,21 @@ Customer Registration / Login
       Submit Review
 ```
 
+## 🔑 Demo Login Credentials
+
+Use the following demo accounts to explore the platform's role-based functionalities.
+
+| Role | Email | Password |
+|------|-------|----------|
+| 👤 Customer | `customer1@gmail.com` | `12341234` |
+| 🛠️ Technician | `tech1@gmail.com` | `12341234` |
+| 🛡️ Admin | `demo1@gmail.com` | `12341234` |
+
+**Note:**
+- These accounts are provided for testing and demonstration purposes only.
+- Each account has different permissions and dashboard access.
+- Please do not change account credentials or sensitive account information.
+
 ## 👥 User Roles
 
 | Role | Permissions |
